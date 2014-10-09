@@ -1,0 +1,73 @@
+make[1]: Entering directory '/home/boudra/dev/game/build'
+make: Entering directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Entering directory '/home/boudra/dev/game/build'
+make[2]: Entering directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[1]: Entering directory '/home/boudra/dev/game/build'
+[  3%] make[2]: Entering directory '/home/boudra/dev/game/build'
+make[2]: Entering directory '/home/boudra/dev/game/build'
+[  3%] Building CXX object CMakeFiles/game.dir/src/main.cpp.o
+Building CXX object CMakeFiles/game.dir/src/main.cpp.o
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Entering directory '/home/boudra/dev/game/build'
+[  3%] Building CXX object CMakeFiles/game.dir/src/main.cpp.o
+Linking CXX executable ../bin/game
+Linking CXX executable ../bin/game
+Linking CXX executable ../bin/game
+Linking CXX executable ../bin/game
+Linking CXX executable ../bin/game
+Linking CXX executable ../bin/game
+Linking CXX executable ../bin/game
+Linking CXX executable ../bin/game
+CMakeFilesCMakeFiles//game.dirgame.dir//srcsrc//main.cpp.omain.cpp.o::  filefile  notnot  recognizedrecognized::  FileFile  truncatedtruncated
+
+collect2: error: ld returned 1 exit status
+collect2: error: ld returned 1 exit status
+CMakeFiles/game.dir/build.make:866: recipe for target '../bin/game' failed
+CMakeFiles/game.dir/build.make:866: recipe for target '../bin/game' failed
+make[2]: *** [../bin/game] Error 1
+make[2]: *** [../bin/game] Error 1
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+CMakeFiles/Makefile2:60: recipe for target 'CMakeFiles/game.dir/all' failed
+make[1]: *** [CMakeFiles/game.dir/all] Error 2
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+Makefile:76: recipe for target 'all' failed
+make: *** [all] Error 2
+make: Leaving directory '/home/boudra/dev/game/build'
+CMakeFiles/Makefile2:60: recipe for target 'CMakeFiles/game.dir/all' failed
+make[1]: *** [CMakeFiles/game.dir/all] Error 2
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+Makefile:76: recipe for target 'all' failed
+make: *** [all] Error 2
+make: Leaving directory '/home/boudra/dev/game/build'
+Linking CXX executable ../bin/game
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+[100%] Built target game
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+Built target game
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+Built target game
+Built target game
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+[ 87%] [ 87%] Built target game
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+Built target game
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'
+[ 78%] Built target game
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'

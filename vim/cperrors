@@ -1,0 +1,7 @@
+make: Entering directory '/home/boudra/dev/game/build'
+make[1]: Entering directory '/home/boudra/dev/game/build'
+make[2]: Entering directory '/home/boudra/dev/game/build'
+make[2]: Leaving directory '/home/boudra/dev/game/build'
+[100%] Built target game
+make[1]: Leaving directory '/home/boudra/dev/game/build'
+make: Leaving directory '/home/boudra/dev/game/build'
