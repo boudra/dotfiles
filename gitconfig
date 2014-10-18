@@ -1,5 +1,6 @@
+[core]
+	excludesfile=~/.gitignore
+	editor=vim
 [user]
 	email = boudra.moha@gmail.com
 	name = Mohamed Boudra
-[github]
-	user = boudra
