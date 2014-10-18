@@ -1,0 +1,5 @@
+--recurse
+--tag-relative=yes
+
+--exclude=*.svn*
+--exclude=*.git*
