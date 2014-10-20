@@ -14,7 +14,7 @@ Bundle 'gmarik/vundle'
 
 Bundle 'Shougo/vimproc.vim'
 Bundle 'syntastic'
-Bundle 'nerdtree'
+Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
@@ -213,4 +213,7 @@ set relativenumber
 set nobackup
 set noswapfile
 set vb t_vb=
-set breakindent
+
+if(exists('breakindent'))
+	set breakindent
+endif
