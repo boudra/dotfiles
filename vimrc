@@ -35,6 +35,7 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-dispatch'
 Bundle 'tpope/vim-surround'
 Bundle 'xolox/vim-session'
+Bundle 'valloric/youcompleteme'
 
 " Javascript
 Bundle "pangloss/vim-javascript"
@@ -216,3 +217,6 @@ set nobackup
 set noswapfile
 set vb t_vb=
 set breakindent
+
+hi Normal ctermbg=NONE
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
