@@ -23,3 +23,5 @@ Thumbs.db
 *.exe
 *.o
 *.so
+.tmp
+.lock
