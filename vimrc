@@ -36,6 +36,7 @@ Bundle 'tpope/vim-dispatch'
 Bundle 'tpope/vim-surround'
 Bundle 'xolox/vim-session'
 Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'valloric/youcompleteme'
 
 " Javascript
 Bundle 'pangloss/vim-javascript'
@@ -56,6 +57,8 @@ Bundle 'chriskempson/vim-tomorrow-theme'
 
 " GLSL
 Bundle 'tikhomirov/vim-glsl'
+Bundle 'php.vim'
+Bundle 'sql.vim'
 
 let mapleader=","
 
@@ -105,7 +108,7 @@ nnoremap <F4> :A<CR>
 
 nnoremap <F12> :colorscheme Tomorrow<enter>:TOhtml<enter>:colorscheme Tomorrow-Night<enter>:w<enter>:!firefox file://%:p<enter>:!rm %:p<enter>:q<enter><enter>
 
-autocmd filetype cpp setl makeprg=make\ -C\ ../build
+autocmd filetype cpp setl makeprg=make\ -j9\ -C\ ../build
 
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
@@ -140,7 +143,7 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :slilent ClangFormat<CR>
 
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_auto_refresh_includes = 1
-let g:syntastic_cpp_compiler_options = '-std=c++11'
+let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall -Wno-long-long -pedantic'
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_cpp_compiler = 'clang++'
 
@@ -169,7 +172,7 @@ map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
-nmap <Leader>e :e **
+nmap <Leader>e :e **/
 nmap <Leader>q :q<CR>
 nmap <Leader>f <C-w><C-f>
 
@@ -220,7 +223,6 @@ set nobackup
 set noswapfile
 set vb t_vb=
 
-
 " use 4 spaces for tabs
 set smartindent
 set tabstop=4
@@ -236,3 +238,6 @@ let g:indent_guides_guide_size = 1
 set regexpengine=1
 
 let g:used_javascript_libs = 'jquery,angularjs,angularui'
+
+hi Normal ctermbg=NONE
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
