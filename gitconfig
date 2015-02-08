@@ -4,3 +4,7 @@
 [user]
 	email = boudra.moha@gmail.com
 	name = Mohamed Boudra
+[diff]
+    tool = vimdiff
+[difftool]
+    prompt = false

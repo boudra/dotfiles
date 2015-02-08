@@ -25,3 +25,9 @@ Thumbs.db
 *.so
 .tmp
 .lock
+*.out*
+*.pyc
+*.trace
+*.swp
+*~
+
