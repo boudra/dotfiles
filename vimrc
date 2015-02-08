@@ -35,9 +35,13 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-dispatch'
 Bundle 'tpope/vim-surround'
 Bundle 'xolox/vim-session'
+Bundle 'nathanaelkane/vim-indent-guides'
 
 " Javascript
-Bundle "pangloss/vim-javascript"
+Bundle 'pangloss/vim-javascript'
+Bundle 'othree/javascript-libraries-syntax.vim'
+Bundle 'jelera/vim-javascript-syntax'
+Bundle 'JavaScript-Indent'
 
 " HTML
 Bundle 'mattn/emmet-vim'
@@ -45,6 +49,7 @@ Bundle 'mattn/emmet-vim'
 Bundle 'chrisbra/Colorizer'
 Bundle 'valloric/MatchTagAlways'
 Bundle 'digitaltoad/vim-jade'
+"Bundle 'brookhong/DBGPavim'
 
 Bundle 'croaky/vim-colors-github'
 Bundle 'chriskempson/vim-tomorrow-theme'
@@ -61,9 +66,6 @@ nmap <C-h> <C-y>,
 
 syntax on 
 set cino=N-s
-
-" use 4 spaces for tabs
-set tabstop=4 softtabstop=4 shiftwidth=4
 
 " display indentation guides
 set list listchars=tab:--,trail:.,extends:»,precedes:«,nbsp:×
@@ -86,6 +88,7 @@ if has("gui_running")
     set guioptions-=T
     set guioptions-=r
     set guioptions-=L
+    set guioptions-=e
     if has("gui_gtk2")
         set guifont=Inconsolata\ for\ Powerline\ Medium\ 13
     elseif has("gui_macvim")
@@ -147,7 +150,7 @@ let g:easytags_dynamic_files = 2
 set tags=./.tags;,~/.vimtags
 
 set t_Co=256
-colorscheme Tomorrow-Night
+colorscheme Tomorrow-Night-Bright
 
 highlight MatchParen gui=bold,underline,italic term=underline guibg=NONE guifg=white ctermbg=none ctermfg=none 
 
@@ -166,7 +169,7 @@ map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
-nmap <Leader>e :e 
+nmap <Leader>e :e **
 nmap <Leader>q :q<CR>
 nmap <Leader>f <C-w><C-f>
 
@@ -199,6 +202,9 @@ nnoremap <down> <nop>
 nnoremap <left> <nop>
 nnoremap <right> <nop>
 
+let g:dbgPavimPort = 9009
+let g:dbgPavimBreakAtEntry = 0
+
 nmap <Tab> :NERDTreeToggle<CR>
 
 set foldmethod=syntax
@@ -214,6 +220,19 @@ set nobackup
 set noswapfile
 set vb t_vb=
 
+
+" use 4 spaces for tabs
+set smartindent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
 if(exists('breakindent'))
 	set breakindent
 endif
+
+let g:indent_guides_guide_size = 1
+set regexpengine=1
+
+let g:used_javascript_libs = 'jquery,angularjs,angularui'
