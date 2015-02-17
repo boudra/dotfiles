@@ -4,6 +4,7 @@
 
 (require 'cl)
 (require 'iso-transl)
+(require 'ido)
 
 (defvar my-packages
   '(evil flycheck color-theme-sanityinc-tomorrow yasnippet auto-complete
@@ -24,6 +25,12 @@
     (when (not (package-installed-p p))
       (package-install p))))
 
+;; ido
+(ido-mode t)
+(setq ido-everywhere t)
+(setq ido-enable-flex-matching t)
+(setq ido-file-extensions-order '(".php" ".js" ".html" ".css" ".cpp" ".hpp" ".c" ".h" ".txt"))
+
 ;; Evil
 (global-evil-leader-mode)
 (evil-leader/set-leader ",")
@@ -31,6 +38,7 @@
 (evil-leader/set-key
  "w" 'save-buffer
  "e" 'find-file
+ "f" 'find-file
  "c" 'cd
  "d" 'dired
  "k" 'kill-this-buffer
@@ -94,7 +102,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; web-dev
 
-
 (defun php-setup ()
   ;; enable web mode
   (web-mode)
@@ -112,8 +119,6 @@ See URL `http://php.net/manual/en/features.commandline.php'."
   (flycheck-select-checker 'php-checker)
 
   (payas/ac-setup)
-
-  (add-to-list 'auto-mode-alist '("\\.php$" . php-setup))
 
   (setq web-mode-ac-sources-alist '(("php" . (ac-source-yasnippet ac-source-php-auto-yasnippets))
 				    ("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
@@ -140,7 +145,7 @@ See URL `http://php.net/manual/en/features.commandline.php'."
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-markup-indent-offset 2))
 
-
+(add-to-list 'auto-mode-alist '("\\.php$" . php-setup))
 
 (set-face-attribute 'mode-line nil :foreground "#fff" :background "#333" :box nil)
 (set-face-attribute 'mode-line-inactive nil :background "#111" :box nil)
@@ -149,4 +154,3 @@ See URL `http://php.net/manual/en/features.commandline.php'."
 (set-face-background 'hl-line "#222")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
-
