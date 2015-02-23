@@ -105,6 +105,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (defun php-setup ()
   ;; enable web mode
   (web-mode)
+  (emmet-mode)
 
   (flycheck-define-checker php-checker
     "A PHP syntax checker using the PHP command line interpreter.
