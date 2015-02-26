@@ -9,7 +9,8 @@
 (defvar my-packages
   '(evil flycheck color-theme-sanityinc-tomorrow yasnippet auto-complete
 	 emmet-mode evil-surround evil-numbers evil-nerd-commenter evil-leader
-	 web-mode php-mode php-auto-yasnippets)
+	 web-mode php-mode php-auto-yasnippets auto-complete-clang
+	 cpputils-cmake)
   "A list of packages to ensure are installed at launch.")
  
 (defun my-packages-installed-p ()
@@ -38,9 +39,10 @@
 (evil-leader/set-key
  "w" 'save-buffer
  "e" 'find-file
- "f" 'find-file
- "c" 'cd
+ "f" 'ff-find-related-file
+ "b" 'ido-switch-buffer
  "d" 'dired
+ "c" 'compile
  "k" 'kill-this-buffer
  "m" 'toggle-frame-maximized
 )
@@ -66,6 +68,7 @@
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
 (global-auto-complete-mode t)
+(add-to-list 'ac-sources 'ac-clang)
 
 (require 'php-auto-yasnippets)
 
@@ -154,3 +157,40 @@ See URL `http://php.net/manual/en/features.commandline.php'."
 (set-face-background 'hl-line "#222")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
+
+
+;; C++
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (if (derived-mode-p 'c-mode 'c++-mode)
+                (cppcm-reload-all)
+              )))
+;; OPTIONAL, somebody reported that they can use this package with Fortran
+(add-hook 'c90-mode-hook (lambda () (cppcm-reload-all)))
+;; OPTIONAL, avoid typing full path when starting gdb
+(global-set-key (kbd "C-c C-g")
+ '(lambda ()(interactive) (gud-gdb (concat "gdb --fullname " (cppcm-get-exe-path-current-buffer)))))
+
+;; OPTIONAL, some users need specify extra flags forwarded to compiler
+;;(setq cppcm-extra-preprocss-flags-from-user '("-I/usr/src/linux/include" "-DNDEBUG"))
+
+(setq cppcm-get-executable-full-path-callback
+      (lambda (path type tgt-name)
+        ;; path is the supposed-to-be target's full path
+        ;; type is either add_executabe or add_library
+        ;; tgt-name is the target to built. The target's file extension is stripped
+        (message "cppcm-get-executable-full-path-callback called => %s %s %s" path type tgt-name)
+        (let ((dir (file-name-directory path))
+              (file (file-name-nondirectory path)))
+          (cond
+           ((string= type "add_executable")
+            (setq path (concat dir "bin/" file)))
+           ;; for add_library
+           (t (setq path (concat dir "lib/" file)))
+           ))
+        ;; return the new path
+        (message "cppcm-get-executable-full-path-callback called => path=%s" path)
+        path))
+
+(setq flycheck-clang-language-standard "c++11")
+(setq flycheck-clang-standard-library "libc++")
