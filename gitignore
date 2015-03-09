@@ -30,5 +30,7 @@ Thumbs.db
 *.trace
 *.swp
 *~
-#*#
-
+\#*\#
+.\#*\#
+.\#*
+node_modules

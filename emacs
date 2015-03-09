@@ -150,6 +150,7 @@ See URL `http://php.net/manual/en/features.commandline.php'."
   (setq web-mode-markup-indent-offset 2))
 
 (add-to-list 'auto-mode-alist '("\\.php$" . php-setup))
+(add-to-list 'auto-mode-alist '("\\.scss$" . css-mode))
 
 (set-face-attribute 'mode-line nil :foreground "#fff" :background "#333" :box nil)
 (set-face-attribute 'mode-line-inactive nil :background "#111" :box nil)
