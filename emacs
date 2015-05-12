@@ -196,3 +196,24 @@ See URL `http://php.net/manual/en/features.commandline.php'."
 
 (setq flycheck-clang-language-standard "c++11")
 (setq flycheck-clang-standard-library "libc++")
+
+
+;; Backups
+
+
+(defvar --backup-directory (concat user-emacs-directory "backups"))
+(if (not (file-exists-p --backup-directory))
+        (make-directory --backup-directory t))
+
+(setq backup-directory-alist `(("." . ,--backup-directory)))
+
+(setq version-control t     ;; Use version numbers for backups.
+      make-backup-files t
+      kept-new-versions 10  ;; Number of newest versions to keep.
+      kept-old-versions 6   ;; Number of oldest versions to keep.
+      delete-old-versions t ;; Don't ask to delete excess backup versions.
+      delete-by-moving-to-trash t
+      vc-make-backup-files t
+      backup-by-copying t)  ;; Copy all files, don't rename them
+
+
