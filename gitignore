@@ -36,3 +36,4 @@ Thumbs.db
 node_modules
 *.log
 vendor
+.sass-cache
