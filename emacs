@@ -10,7 +10,7 @@
   '(evil flycheck color-theme-sanityinc-tomorrow yasnippet auto-complete
 	 emmet-mode evil-surround evil-numbers evil-nerd-commenter evil-leader
 	 web-mode php-mode php-auto-yasnippets auto-complete-clang
-	 cpputils-cmake)
+	 cpputils-cmake tss)
   "A list of packages to ensure are installed at launch.")
  
 (defun my-packages-installed-p ()
@@ -43,6 +43,7 @@
  "b" 'ido-switch-buffer
  "d" 'dired
  "c" 'compile
+ "q" 'quit
  "k" 'kill-this-buffer
  "m" 'toggle-frame-maximized
 )
@@ -217,3 +218,19 @@ See URL `http://php.net/manual/en/features.commandline.php'."
       backup-by-copying t)  ;; Copy all files, don't rename them
 
 
+
+;; TYPESCRIPT
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
+
+(require 'tss)
+
+;; Key binding
+(setq tss-popup-help-key "C-:")
+(setq tss-jump-to-definition-key "C->")
+(setq tss-implement-definition-key "C-c i")
+
+;; Make config suit for you. About the config item, eval the following sexp.
+;; (customize-group "tss")
+
+;; Do setting recommemded configuration
+(tss-config-default)
