@@ -12,11 +12,3 @@ for file in  *; do
         fi
     done
 done
-
-gsettings set org.gnome.settings-daemon.plugins.xsettings antialiasing rgba
-gsettings set org.gnome.settings-daemon.plugins.xsettings hinting slight
-
-gsettings set org.gnome.desktop.interface document-font-name "PT Sans 11"
-gsettings set org.gnome.desktop.interface font-name "PT Sans 11"
-gsettings set org.gnome.desktop.interface monospace-font-name "Inconsolata
-Medium 11"
