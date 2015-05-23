@@ -373,4 +373,4 @@
 *.color15:      t_current_line
 
 URxvt.scrollBar: false
-URxvt.font: xft:Monaco:size=12
+URxvt.font: xft:Monaco:size=11
