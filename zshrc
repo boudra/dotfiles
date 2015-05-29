@@ -13,6 +13,8 @@ export PATH=$HOME/bin:/usr/local/bin:$HOME/.node/bin:$PATH
 export LANG=en_US.UTF-8
 export EDITOR='vim'
 
+xrdb -merge ~/.Xresources
+
 ###-begin-npm-completion-###
 #
 # npm command completion script
