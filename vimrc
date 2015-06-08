@@ -15,6 +15,7 @@ Bundle 'gmarik/vundle'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'syntastic'
 Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/nerdcommenter'
 Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
@@ -36,13 +37,18 @@ Bundle 'tpope/vim-dispatch'
 Bundle 'tpope/vim-surround'
 Bundle 'xolox/vim-session'
 Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'valloric/youcompleteme'
+Bundle 'kien/ctrlp.vim'
+Bundle 'terryma/vim-multiple-cursors'
+Bundle 'godlygeek/tabular'
+
+" Bundle 'valloric/youcompleteme'
 
 " Javascript
 Bundle 'pangloss/vim-javascript'
 Bundle 'othree/javascript-libraries-syntax.vim'
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'JavaScript-Indent'
+Bundle 'leafgarland/typescript-vim'
 
 " HTML
 Bundle 'mattn/emmet-vim'
@@ -58,6 +64,7 @@ Bundle 'chriskempson/vim-tomorrow-theme'
 " GLSL
 Bundle 'tikhomirov/vim-glsl'
 Bundle 'php.vim'
+
 Bundle 'sql.vim'
 
 let mapleader=","
@@ -153,7 +160,7 @@ let g:easytags_dynamic_files = 2
 set tags=./.tags;,~/.vimtags
 
 set t_Co=256
-colorscheme Tomorrow-Night-Bright
+colorscheme Tomorrow-Night
 
 highlight MatchParen gui=bold,underline,italic term=underline guibg=NONE guifg=white ctermbg=none ctermfg=none 
 
@@ -172,8 +179,10 @@ map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
-nmap <Leader>e :e **/
+nmap <Leader>e :CtrlP<CR>
+nmap <Leader>b :CtrlPBuffer<CR>
 nmap <Leader>q :q<CR>
+nmap <Leader>k :bd<CR>
 nmap <Leader>f <C-w><C-f>
 
 nnoremap <C-p> :tabprevious<CR>
@@ -188,22 +197,13 @@ let g:EasyMotion_use_smartsign_us = 1
 let g:EasyMotion_smartcase = 1
 
 let g:session_autosave = 'yes'
+let g:session_autoload = 'no'
 
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 
 map  n <Plug>(easymotion-next)
 map  N <Plug>(easymotion-prev)
-
-" Disable the arrow keys
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
 
 let g:dbgPavimPort = 9009
 let g:dbgPavimBreakAtEntry = 0
@@ -241,3 +241,13 @@ let g:used_javascript_libs = 'jquery,angularjs,angularui'
 
 hi Normal ctermbg=NONE
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+
+" CtrlP
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_custom_ignore = '(node_modules|vendor)$'
+
+
+" Javascript
+let g:javascript_conceal_function   = "ƒ"
+let g:javascript_conceal_null       = "ø"
+let g:javascript_conceal_this       = "@"
