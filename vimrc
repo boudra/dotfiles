@@ -40,6 +40,7 @@ Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'kien/ctrlp.vim'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'godlygeek/tabular'
+Bundle 'fugitive.vim'
 
 " Bundle 'valloric/youcompleteme'
 
@@ -70,9 +71,9 @@ Bundle 'sql.vim'
 let mapleader=","
 
 " Bind C-h to Emmet expander
-imap <C-h> <C-y>,
-vmap <C-h> <C-y>,
-nmap <C-h> <C-y>,
+imap <C-j> <C-y>,
+vmap <C-j> <C-y>,
+nmap <C-j> <C-y>,
 
 syntax on 
 set cino=N-s
