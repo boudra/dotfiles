@@ -32,7 +32,7 @@ Bundle 'tomasr/molokai'
 Bundle 'w0ng/vim-hybrid'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'argtextobj.vim'
-Bundle 'Raimondi/delimitMate'
+Bundle 'jiangmiao/auto-pairs'
 Bundle 'tpope/vim-dispatch'
 Bundle 'tpope/vim-surround'
 Bundle 'xolox/vim-session'
@@ -245,10 +245,11 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_custom_ignore = '(node_modules|vendor)$'
+let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release'
 
 
 " Javascript
 let g:javascript_conceal_function   = "ƒ"
 let g:javascript_conceal_null       = "ø"
 let g:javascript_conceal_this       = "@"
+let g:syntastic_javascript_checkers = ['eslint']
