@@ -37,3 +37,4 @@ node_modules
 *.log
 vendor
 .sass-cache
+.eslintrc
