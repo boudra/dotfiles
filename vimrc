@@ -32,7 +32,7 @@ Bundle 'tomasr/molokai'
 Bundle 'w0ng/vim-hybrid'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'argtextobj.vim'
-Bundle 'Raimondi/delimitMate'
+Bundle 'jiangmiao/auto-pairs'
 Bundle 'tpope/vim-dispatch'
 Bundle 'tpope/vim-surround'
 Bundle 'xolox/vim-session'
@@ -40,6 +40,7 @@ Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'kien/ctrlp.vim'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'godlygeek/tabular'
+Bundle 'fugitive.vim'
 
 " Bundle 'valloric/youcompleteme'
 
@@ -70,9 +71,9 @@ Bundle 'sql.vim'
 let mapleader=","
 
 " Bind C-h to Emmet expander
-imap <C-h> <C-y>,
-vmap <C-h> <C-y>,
-nmap <C-h> <C-y>,
+imap <C-j> <C-y>,
+vmap <C-j> <C-y>,
+nmap <C-j> <C-y>,
 
 syntax on 
 set cino=N-s
@@ -244,10 +245,11 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_custom_ignore = '(node_modules|vendor)$'
+let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release'
 
 
 " Javascript
 let g:javascript_conceal_function   = "ƒ"
 let g:javascript_conceal_null       = "ø"
 let g:javascript_conceal_this       = "@"
+let g:syntastic_javascript_checkers = ['eslint']
