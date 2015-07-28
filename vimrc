@@ -16,20 +16,16 @@ Bundle 'Shougo/vimproc.vim'
 Bundle 'syntastic'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
-Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Bundle 'bling/vim-airline'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'garbas/vim-snipmate'
 Bundle 'honza/vim-snippets'
 Bundle 'rhysd/vim-clang-format'
-Bundle 'altercation/vim-colors-solarized'
 Bundle 'a.vim'
 Bundle 'octol/vim-cpp-enhanced-highlight'
 Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-easytags'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'tomasr/molokai'
-Bundle 'w0ng/vim-hybrid'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'argtextobj.vim'
 Bundle 'jiangmiao/auto-pairs'
@@ -41,30 +37,35 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'godlygeek/tabular'
 Bundle 'fugitive.vim'
+Bundle 'kristijanhusak/vim-hybrid-material'
+Bundle 'ntpeters/vim-better-whitespace'
 
-" Bundle 'valloric/youcompleteme'
+Bundle 'valloric/youcompleteme'
+
+Bundle 'majutsushi/tagbar'
 
 " Javascript
 Bundle 'pangloss/vim-javascript'
 Bundle 'othree/javascript-libraries-syntax.vim'
-Bundle 'jelera/vim-javascript-syntax'
-Bundle 'JavaScript-Indent'
 Bundle 'leafgarland/typescript-vim'
+Bundle 'burnettk/vim-angular'
+Bundle 'marijnh/tern_for_vim'
+
+let g:angular_filename_convention = 'titlecased'
 
 " HTML
 Bundle 'mattn/emmet-vim'
-"Bundle 'othree/html5.vim'
+Bundle 'othree/html5.vim'
 Bundle 'chrisbra/Colorizer'
 Bundle 'valloric/MatchTagAlways'
-Bundle 'digitaltoad/vim-jade'
 "Bundle 'brookhong/DBGPavim'
+"Bundle 'php.vim'
 
-Bundle 'croaky/vim-colors-github'
 Bundle 'chriskempson/vim-tomorrow-theme'
 
 " GLSL
 Bundle 'tikhomirov/vim-glsl'
-Bundle 'php.vim'
+
 
 Bundle 'sql.vim'
 
@@ -75,7 +76,7 @@ imap <C-j> <C-y>,
 vmap <C-j> <C-y>,
 nmap <C-j> <C-y>,
 
-syntax on 
+syntax on
 set cino=N-s
 
 " display indentation guides
@@ -121,7 +122,6 @@ autocmd filetype cpp setl makeprg=make\ -j9\ -C\ ../build
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
 
-
 let g:mta_filetypes = {
     \ 'html' : 1,
     \ 'xhtml' : 1,
@@ -131,7 +131,7 @@ let g:mta_filetypes = {
     \ }
 
 let g:clang_format#auto_format = 0
-let g:clang_format#code_style = 'google' 
+let g:clang_format#code_style = 'google'
 let g:clang_format#style_options = {
     \ "AlwaysBreakTemplateDeclarations" : "true",
     \ "BreakBeforeBraces" : "Allman",
@@ -161,9 +161,12 @@ let g:easytags_dynamic_files = 2
 set tags=./.tags;,~/.vimtags
 
 set t_Co=256
-colorscheme Tomorrow-Night
+let g:enable_bold_font = 1
+colorscheme hybrid_material
+let g:airline_theme = 'hybrid'
+let g:airline_powerline_fonts = 1
 
-highlight MatchParen gui=bold,underline,italic term=underline guibg=NONE guifg=white ctermbg=none ctermfg=none 
+highlight MatchParen gui=bold,underline,italic term=underline guibg=NONE guifg=white ctermbg=none ctermfg=none
 
 " Enable line highlighting on insert
 autocmd InsertEnter,InsertLeave * set cul!
@@ -238,10 +241,9 @@ endif
 let g:indent_guides_guide_size = 1
 set regexpengine=1
 
-let g:used_javascript_libs = 'jquery,angularjs,angularui'
+let g:used_javascript_libs = 'jquery,angularjs,angularui,underscore,lodash'
 
 hi Normal ctermbg=NONE
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
