@@ -10,3 +10,4 @@ style "vimfix" {
   bg[NORMAL] = "#111111" # this matches my gvim theme 'Normal' bg color.
 }
 widget "vim-main-window.*GtkForm" style "vimfix"
+gtk-theme-name = "Adwaita-X"
