@@ -1,12 +1,12 @@
 [core]
-	excludesfile=~/.gitignore
-	editor=vim
+    excludesfile=~/.gitignore
+    editor=vim
 [user]
-	email = boudra.moha@gmail.com
-	name = Mohamed Boudra
+    email = boudra.moha@gmail.com
+    name = Mohamed Boudra
 [diff]
     tool = vimdiff
 [difftool]
     prompt = false
 [push]
-	default = simple
+    default = simple

@@ -19,7 +19,8 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'bling/vim-airline'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
-Bundle 'garbas/vim-snipmate'
+Bundle 'ervandew/supertab'
+Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 Bundle 'rhysd/vim-clang-format'
 Bundle 'a.vim'
@@ -58,20 +59,17 @@ Bundle 'mattn/emmet-vim'
 Bundle 'othree/html5.vim'
 Bundle 'chrisbra/Colorizer'
 Bundle 'valloric/MatchTagAlways'
-"Bundle 'brookhong/DBGPavim'
-"Bundle 'php.vim'
 
 Bundle 'chriskempson/vim-tomorrow-theme'
 
 " GLSL
 Bundle 'tikhomirov/vim-glsl'
 
-
 Bundle 'sql.vim'
 
 let mapleader=","
 
-" Bind C-h to Emmet expander
+" Bind C-j to Emmet expander
 imap <C-j> <C-y>,
 vmap <C-j> <C-y>,
 nmap <C-j> <C-y>,
@@ -81,15 +79,6 @@ set cino=N-s
 
 " display indentation guides
 set list listchars=tab:--,trail:.,extends:»,precedes:«,nbsp:×
-
-" convert spaces to tabs when reading file
-" autocmd! bufreadpost * if &l:modifiable | set noexpandtab | retab! 4 | endif
-
-" convert tabs to spaces before writing file
-" autocmd! bufwritepre * set expandtab | retab! 4
-
-" convert spaces to tabs after writing file (to show guides again)
-" autocmd! bufwritepost * set noexpandtab | retab! 4
 
 filetype plugin indent on
 
@@ -102,7 +91,7 @@ if has("gui_running")
     set guioptions-=L
     set guioptions-=e
     if has("gui_gtk2")
-        set guifont=Monaco\ 11
+        set guifont=Meslo\ LG\ S\ for\ Powerline\ 11
     elseif has("gui_macvim")
         set guifont=Menlo\ Regular:h14
     elseif has("gui_win32")
@@ -115,7 +104,7 @@ nnoremap <F5> :make<CR>
 " Switch from header to source and viceversa
 nnoremap <F4> :A<CR>
 
-nnoremap <F12> :colorscheme Tomorrow<enter>:TOhtml<enter>:colorscheme Tomorrow-Night<enter>:w<enter>:!firefox file://%:p<enter>:!rm %:p<enter>:q<enter><enter>
+nnoremap <F12> :colorscheme Tomorrow<enter>:TOhtml<enter>:colorscheme hybrid_material<enter>:w<enter>:!firefox file://%:p<enter>:!rm %:p<enter>:q<enter><enter>
 
 autocmd filetype cpp setl makeprg=make\ -j9\ -C\ ../build
 
@@ -158,7 +147,17 @@ let g:syntastic_cpp_compiler = 'clang++'
 let g:easytags_events = ['BufWritePost']
 let g:easytags_async = 1
 let g:easytags_dynamic_files = 2
-set tags=./.tags;,~/.vimtags
+set tags=~/.vim/.vimtags
+
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 set t_Co=256
 let g:enable_bold_font = 1
@@ -212,7 +211,8 @@ map  N <Plug>(easymotion-prev)
 let g:dbgPavimPort = 9009
 let g:dbgPavimBreakAtEntry = 0
 
-nmap <Tab> :NERDTreeToggle<CR>
+"nmap <Tab> :NERDTreeToggle<CR>
+"imap <Tab> <Plug>snipMateTrigger
 
 set foldmethod=syntax
 set textwidth=80
@@ -227,19 +227,20 @@ set nobackup
 set noswapfile
 set vb t_vb=
 
-" use 4 spaces for tabs
 set smartindent
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+set regexpengine=1
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
 
 if(exists('breakindent'))
 	set breakindent
 endif
 
 let g:indent_guides_guide_size = 1
-set regexpengine=1
 
 let g:used_javascript_libs = 'jquery,angularjs,angularui,underscore,lodash'
 
@@ -248,7 +249,6 @@ hi Normal ctermbg=NONE
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release'
-
 
 " Javascript
 let g:javascript_conceal_function   = "ƒ"
