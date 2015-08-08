@@ -9,10 +9,6 @@ plugins=(git svn svn-fast-info)
 
 source $ZSH/oh-my-zsh.sh
 
-export PATH=$HOME/.composer/vendor/bin:$HOME/Android/Sdk/tools:$HOME/Android/Sdk/platform-tools:$HOME/bin:/usr/local/bin:$HOME/.node/bin:$PATH
-export LANG=en_US.UTF-8
-export EDITOR='vim'
-
 ###-begin-npm-completion-###
 #
 # npm command completion script
