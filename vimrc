@@ -13,8 +13,7 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 Bundle 'Shougo/vimproc.vim'
-Bundle 'syntastic'
-Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'bling/vim-airline'
 Bundle 'MarcWeber/vim-addon-mw-utils'
@@ -216,6 +215,8 @@ let g:dbgPavimBreakAtEntry = 0
 
 set foldmethod=syntax
 set textwidth=80
+set colorcolumn=+1
+set cursorline
 set foldlevel=1
 set foldlevelstart=20
 
@@ -255,3 +256,4 @@ let g:javascript_conceal_function   = "ƒ"
 let g:javascript_conceal_null       = "ø"
 let g:javascript_conceal_this       = "@"
 let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_typescript_checkers = ['tslint', 'tsc']
