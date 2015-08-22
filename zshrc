@@ -5,7 +5,7 @@ ZSH_THEME="pygmalion"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 DISABLE_AUTO_UPDATE="true"
-plugins=(git svn svn-fast-info)
+plugins=(git svn svn-fast-info vi-mode vim-interaction)
 
 source $ZSH/oh-my-zsh.sh
 
