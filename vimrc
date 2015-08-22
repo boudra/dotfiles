@@ -39,10 +39,10 @@ Bundle 'godlygeek/tabular'
 Bundle 'fugitive.vim'
 Bundle 'kristijanhusak/vim-hybrid-material'
 Bundle 'ntpeters/vim-better-whitespace'
+Bundle 'rking/ag.vim'
+Bundle 'unblevable/quick-scope'
 
 Bundle 'valloric/youcompleteme'
-
-Bundle 'majutsushi/tagbar'
 
 " Javascript
 Bundle 'pangloss/vim-javascript'
@@ -89,8 +89,9 @@ if has("gui_running")
     set guioptions-=r
     set guioptions-=L
     set guioptions-=e
+    set linespace=6
     if has("gui_gtk2")
-        set guifont=Meslo\ LG\ S\ for\ Powerline\ 11
+        set guifont=Inconsolata-g\ for\ Powerline\ 11
     elseif has("gui_macvim")
         set guifont=Menlo\ Regular:h14
     elseif has("gui_win32")
@@ -176,7 +177,16 @@ vmap <C-c> "+y
 vmap <C-x> "+c
 vmap <C-v> c<C-o>"+p
 
+noremap 0 ^
+noremap ^ 0
+
+noremap [ {
+noremap ] }
+
+inoremap jj <ESC>
+
 map <Leader>j <Plug>(easymotion-j)
+
 map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
@@ -215,7 +225,6 @@ let g:dbgPavimBreakAtEntry = 0
 
 set foldmethod=syntax
 set textwidth=80
-set colorcolumn=+1
 set cursorline
 set foldlevel=1
 set foldlevelstart=20
@@ -225,9 +234,11 @@ set wrap
 set number
 set relativenumber
 set nobackup
+set lazyredraw
 set noswapfile
 set vb t_vb=
 
+set iskeyword-=_
 set smartindent
 set tabstop=4
 set softtabstop=4
@@ -245,7 +256,7 @@ let g:indent_guides_guide_size = 1
 
 let g:used_javascript_libs = 'jquery,angularjs,angularui,underscore,lodash'
 
-hi Normal ctermbg=NONE
+"hi Normal ctermbg=NONE
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
@@ -257,3 +268,10 @@ let g:javascript_conceal_null       = "ø"
 let g:javascript_conceal_this       = "@"
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_typescript_checkers = ['tslint', 'tsc']
+
+
+" quick-scope
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+" ag.vim
+let g:ag_working_path_mode="ra"
