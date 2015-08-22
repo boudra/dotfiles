@@ -2,6 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="pygmalion"
+TERM=screen-256color
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 DISABLE_AUTO_UPDATE="true"
