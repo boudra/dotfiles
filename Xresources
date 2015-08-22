@@ -373,4 +373,14 @@
 *color15:      t_current_line
 
 URxvt.scrollBar: false
-URxvt.font: xft:Monaco:size=11
+URxvt.font: xft:Inconsolata for Powerline:style=g:size=12
+
+Xft.dpi:        96
+Xft.antialias:  true
+Xft.hinting:    true
+Xft.rgba:       rgb
+Xft.hintstyle:  hintslight
+
+URxvt.perl-ext-common : default,matcher
+URxvt.urlLauncher     : firefox
+URxvt.matcher.button  : 1
