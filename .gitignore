@@ -1,1 +1,5 @@
 vim/sessions
+vim/bundle/*
+!vim/bundle/vundle
+vim/.vimtags
+vim/.netrwhist
