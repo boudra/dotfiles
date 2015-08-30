@@ -1,3 +1,4 @@
+#!/bin/bash
 dir=~/dotfiles
 
 exclude=("install.sh", ".git", ".gitignore")

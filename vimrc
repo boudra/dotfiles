@@ -42,6 +42,7 @@ Bundle 'ntpeters/vim-better-whitespace'
 Bundle 'rking/ag.vim'
 Bundle 'unblevable/quick-scope'
 Bundle 'AndrewRadev/splitjoin.vim'
+Bundle 'christoomey/vim-tmux-navigator'
 
 Bundle 'valloric/youcompleteme'
 
