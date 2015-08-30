@@ -41,6 +41,7 @@ Bundle 'kristijanhusak/vim-hybrid-material'
 Bundle 'ntpeters/vim-better-whitespace'
 Bundle 'rking/ag.vim'
 Bundle 'unblevable/quick-scope'
+Bundle 'AndrewRadev/splitjoin.vim'
 
 Bundle 'valloric/youcompleteme'
 
