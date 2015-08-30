@@ -77,7 +77,7 @@ syntax on
 set cino=N-s
 
 " display indentation guides
-set list listchars=tab:--,trail:.,extends:»,precedes:«,nbsp:×
+set list listchars=tab:▸\ ,trail:.,extends:»,precedes:«,nbsp:×,eol:↲
 
 filetype plugin indent on
 
@@ -110,13 +110,14 @@ autocmd filetype cpp setl makeprg=make\ -j9\ -C\ ../build
 
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
+au BufRead,BufNewFile *.blade.php set filetype=html
 
 let g:mta_filetypes = {
-    \ 'html' : 1,
+    \ 'html'  : 1,
     \ 'xhtml' : 1,
-    \ 'xml' : 1,
+    \ 'xml'   : 1,
     \ 'jinja' : 1,
-	\ 'php' : 1,
+	\ 'php'   : 1,
     \ }
 
 let g:clang_format#auto_format = 0
