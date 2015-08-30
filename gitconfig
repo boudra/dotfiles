@@ -10,3 +10,8 @@
     prompt = false
 [push]
     default = simple
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
