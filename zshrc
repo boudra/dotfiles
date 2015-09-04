@@ -14,6 +14,11 @@ source $ZSH/oh-my-zsh.sh
 
 xrdb -merge ~/.Xresources
 
+bindkey '\eOA' history-beginning-search-backward
+bindkey '\e[A' history-beginning-search-backward
+bindkey '\eOB' history-beginning-search-forward
+bindkey '\e[B' history-beginning-search-forward
+
 ###-begin-npm-completion-###
 #
 # npm command completion script

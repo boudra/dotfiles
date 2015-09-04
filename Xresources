@@ -335,7 +335,6 @@
 #define t_blue #81a2be
 #define t_purple #b294bb
 
-
 *foreground:   t_foreground
 *background:   t_background
 *cursorColor:  #aeafad
@@ -384,3 +383,5 @@ Xft.hintstyle:  hintslight
 URxvt.perl-ext-common : default,matcher
 URxvt.urlLauncher     : firefox
 URxvt.matcher.button  : 1
+
+Urxvt*allow_bold: false
