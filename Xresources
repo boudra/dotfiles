@@ -380,8 +380,15 @@ Xft.hinting:    true
 Xft.rgba:       rgb
 Xft.hintstyle:  hintslight
 
-URxvt.perl-ext-common : default,matcher
-URxvt.urlLauncher     : firefox
-URxvt.matcher.button  : 1
+URxvt.perl-ext-common : default,keyboard-select,clipboard,url-select
+URxvt.url-select.launcher: firefox
+
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.clipboard.autocopy: true
+
+URxvt.keysym.M-c:   perl:clipboard:copy
+URxvt.keysym.M-v:   perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
 
 Urxvt*allow_bold: false

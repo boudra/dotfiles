@@ -1,3 +1,5 @@
+if 0 | endif
+
 set nocompatible
 filetype off
 set encoding=utf-8
@@ -6,67 +8,71 @@ if has('win32') || has('win64')
     set runtimepath=$HOME/.vim,$HOME/vimfiles
 endif
 
-set rtp+=~/.vim/bundle/vundle/
+set runtimepath+=~/.vim/bundle/neobundle.vim/
 
-call vundle#rc()
+call neobundle#begin(expand('~/.vim/bundle/'))
 
-Bundle 'gmarik/vundle'
+NeoBundleFetch 'Shougo/neobundle.vim'
 
-Bundle 'Shougo/vimproc.vim'
-Bundle 'scrooloose/syntastic'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'bling/vim-airline'
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'tomtom/tlib_vim'
-Bundle 'ervandew/supertab'
-Bundle 'SirVer/ultisnips'
-Bundle 'honza/vim-snippets'
-Bundle 'rhysd/vim-clang-format'
-Bundle 'a.vim'
-Bundle 'octol/vim-cpp-enhanced-highlight'
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-easytags'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'argtextobj.vim'
-Bundle 'jiangmiao/auto-pairs'
-Bundle 'tpope/vim-dispatch'
-Bundle 'tpope/vim-surround'
-Bundle 'xolox/vim-session'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'kien/ctrlp.vim'
-Bundle 'terryma/vim-multiple-cursors'
-Bundle 'godlygeek/tabular'
-Bundle 'fugitive.vim'
-Bundle 'kristijanhusak/vim-hybrid-material'
-Bundle 'ntpeters/vim-better-whitespace'
-Bundle 'rking/ag.vim'
-Bundle 'unblevable/quick-scope'
-Bundle 'AndrewRadev/splitjoin.vim'
-Bundle 'christoomey/vim-tmux-navigator'
-
-Bundle 'valloric/youcompleteme'
+NeoBundle 'Shougo/vimproc.vim'
+NeoBundle 'Shougo/neocomplete'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'bling/vim-airline'
+NeoBundle 'MarcWeber/vim-addon-mw-utils'
+NeoBundle 'tomtom/tlib_vim'
+NeoBundle 'ervandew/supertab'
+NeoBundle 'SirVer/ultisnips'
+NeoBundle 'honza/vim-snippets'
+NeoBundle 'rhysd/vim-clang-format'
+NeoBundle 'a.vim'
+NeoBundle 'octol/vim-cpp-enhanced-highlight'
+NeoBundle 'xolox/vim-misc'
+NeoBundle 'xolox/vim-easytags'
+NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'argtextobj.vim'
+NeoBundle 'jiangmiao/auto-pairs'
+NeoBundle 'tpope/vim-dispatch'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'xolox/vim-session'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'fugitive.vim'
+NeoBundle 'kristijanhusak/vim-hybrid-material'
+NeoBundle 'ntpeters/vim-better-whitespace'
+NeoBundle 'rking/ag.vim'
+NeoBundle 'unblevable/quick-scope'
+NeoBundle 'AndrewRadev/splitjoin.vim'
+NeoBundle 'christoomey/vim-tmux-navigator'
 
 " Javascript
-Bundle 'pangloss/vim-javascript'
-Bundle 'othree/javascript-libraries-syntax.vim'
-Bundle 'leafgarland/typescript-vim'
-Bundle 'burnettk/vim-angular'
-Bundle 'marijnh/tern_for_vim'
-
-let g:angular_filename_convention = 'titlecased'
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'othree/javascript-libraries-syntax.vim'
+NeoBundle 'leafgarland/typescript-vim'
+NeoBundle 'burnettk/vim-angular'
+NeoBundle 'marijnh/tern_for_vim'
 
 " HTML
-Bundle 'mattn/emmet-vim'
-Bundle 'othree/html5.vim'
-Bundle 'chrisbra/Colorizer'
-Bundle 'valloric/MatchTagAlways'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'othree/html5.vim'
+NeoBundle 'chrisbra/Colorizer'
+NeoBundle 'valloric/MatchTagAlways'
 
-Bundle 'chriskempson/vim-tomorrow-theme'
+NeoBundle 'm2mdas/phpcomplete-extended'
+NeoBundle 'chriskempson/vim-tomorrow-theme'
 
 " GLSL
-Bundle 'tikhomirov/vim-glsl'
+NeoBundle 'tikhomirov/vim-glsl'
 
-Bundle 'sql.vim'
+NeoBundle 'sql.vim'
+
+call neobundle#end()
+
+NeoBundleCheck
+
+let g:angular_filename_convention = 'titlecased'
 
 let mapleader=","
 
@@ -255,6 +261,52 @@ if(exists('breakindent'))
 	set breakindent
 endif
 
+
+"#####################
+"# Neocomplete
+"#####################
+
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 4
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#close_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
 let g:indent_guides_guide_size = 1
 
 let g:used_javascript_libs = 'jquery,angularjs,angularui,underscore,lodash'
@@ -278,3 +330,7 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " ag.vim
 let g:ag_working_path_mode="ra"
+
+" PHP
+let g:phpcomplete_index_composer_command="composer"
+autocmd FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
