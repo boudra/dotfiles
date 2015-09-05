@@ -1,5 +1,7 @@
-vim/sessions
-vim/bundle/*
-!vim/bundle/neobundle.vim
-vim/.vimtags
-vim/.netrwhist
+/vim/sessions
+/vim/bundle/*
+!/vim/bundle/neobundle.vim
+/fonts/*
+!fonts/powerline-fonts
+/vim/.vimtags
+/vim/.netrwhist
