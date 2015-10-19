@@ -38,3 +38,5 @@ node_modules
 vendor
 .sass-cache
 .eslintrc
+.phpcomplete_extended
+codeception.yml

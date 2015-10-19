@@ -40,12 +40,14 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'fugitive.vim'
+NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'ntpeters/vim-better-whitespace'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'unblevable/quick-scope'
 NeoBundle 'AndrewRadev/splitjoin.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'joonty/vdebug'
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
@@ -60,7 +62,6 @@ NeoBundle 'othree/html5.vim'
 NeoBundle 'chrisbra/Colorizer'
 NeoBundle 'valloric/MatchTagAlways'
 
-NeoBundle 'm2mdas/phpcomplete-extended'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 
 " GLSL
@@ -97,7 +98,6 @@ if has("gui_running")
     set guioptions-=r
     set guioptions-=L
     set guioptions-=e
-    set linespace=6
     if has("gui_gtk2")
         set guifont=Inconsolata-g\ for\ Powerline\ 11
     elseif has("gui_macvim")
@@ -152,6 +152,7 @@ let g:syntastic_cpp_auto_refresh_includes = 1
 let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall -Wno-long-long -pedantic'
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
 
 let g:easytags_events = ['BufWritePost']
 let g:easytags_async = 1
@@ -246,6 +247,7 @@ set nobackup
 set lazyredraw
 set noswapfile
 set vb t_vb=
+set so=5
 
 set iskeyword-=_
 set smartindent
@@ -269,7 +271,7 @@ endif
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_at_startup = 0
 " Use smartcase.
 let g:neocomplete#enable_smart_case = 1
 " Set minimum syntax keyword length.
@@ -315,7 +317,7 @@ let g:used_javascript_libs = 'jquery,angularjs,angularui,underscore,lodash'
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release'
+let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release\|public\/js'
 
 " Javascript
 let g:javascript_conceal_function   = "ƒ"
@@ -331,6 +333,4 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 " ag.vim
 let g:ag_working_path_mode="ra"
 
-" PHP
-let g:phpcomplete_index_composer_command="composer"
-autocmd FileType  php setlocal omnifunc=phpcomplete_extended#CompletePHP
+set autoread
