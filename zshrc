@@ -12,8 +12,6 @@ plugins=(git svn svn-fast-info vi-mode vim-interaction)
 
 source $ZSH/oh-my-zsh.sh
 
-xrdb -merge ~/.Xresources
-
 bindkey '\eOA' history-beginning-search-backward
 bindkey '\e[A' history-beginning-search-backward
 bindkey '\eOB' history-beginning-search-forward

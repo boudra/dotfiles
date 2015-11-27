@@ -48,6 +48,7 @@ NeoBundle 'unblevable/quick-scope'
 NeoBundle 'AndrewRadev/splitjoin.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'joonty/vdebug'
+NeoBundle 'xsbeats/vim-blade'
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
@@ -101,11 +102,14 @@ if has("gui_running")
     if has("gui_gtk2")
         set guifont=Inconsolata-g\ for\ Powerline\ 11
     elseif has("gui_macvim")
-        set guifont=Menlo\ Regular:h14
+        set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
     elseif has("gui_win32")
         set guifont=Consolas:h11:cANSI
     endif
 endif
+
+
+set linespace=1
 
 nnoremap <F5> :make<CR>
 
@@ -118,7 +122,6 @@ autocmd filetype cpp setl makeprg=make\ -j9\ -C\ ../build
 
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
-au BufRead,BufNewFile *.blade.php set filetype=html
 
 let g:mta_filetypes = {
     \ 'html'  : 1,
@@ -207,6 +210,10 @@ nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>f <C-w><C-f>
 
+nmap gs :Gstatus<CR>
+nmap gp :Git pull<CR>
+nmap gP :Git push<CR>
+
 nnoremap <C-p> :tabprevious<CR>
 nnoremap <C-n> :tabnext<CR>
 nnoremap <C-tab> :tabnext<CR>
@@ -234,10 +241,12 @@ let g:dbgPavimBreakAtEntry = 0
 "imap <Tab> <Plug>snipMateTrigger
 
 set foldmethod=syntax
-set textwidth=80
+set textwidth=0
+set wrapmargin=0
 set cursorline
 set foldlevel=1
 set foldlevelstart=20
+set formatoptions=cq
 
 set laststatus=2
 set wrap
@@ -258,6 +267,9 @@ set expandtab
 set regexpengine=1
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+
+autocmd filetype scss set sw=2
+autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
 
 if(exists('breakindent'))
 	set breakindent
@@ -312,8 +324,6 @@ endif
 let g:indent_guides_guide_size = 1
 
 let g:used_javascript_libs = 'jquery,angularjs,angularui,underscore,lodash'
-
-"hi Normal ctermbg=NONE
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
