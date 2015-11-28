@@ -31,7 +31,7 @@ NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'argtextobj.vim'
-NeoBundle 'jiangmiao/auto-pairs'
+NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'xolox/vim-session'
@@ -49,6 +49,9 @@ NeoBundle 'AndrewRadev/splitjoin.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'joonty/vdebug'
 NeoBundle 'xsbeats/vim-blade'
+NeoBundle 'fatih/vim-go'
+NeoBundle 'matchit.zip'
+NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
