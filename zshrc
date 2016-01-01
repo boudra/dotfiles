@@ -18,10 +18,20 @@ bindkey '\eOB' history-beginning-search-forward
 bindkey '\e[B' history-beginning-search-forward
 
 function new-tmux-session {
-    tmux new-session -As `basename $PWD`
+  tmux new-session -As `basename $PWD`
 }
 
 # Aliases
 
 alias e="$EDITOR"
 alias tnew="new-tmux-session"
+alias dcm="docker-machine"
+alias dcp="docker-compose"
+
+# Colors
+
+COLORS="$HOME/.vim/bundle/vim-hybrid-material/base16-material/base16-material.dark.sh"
+
+if [ -f $COLORS ]; then
+    source $COLORS
+fi
