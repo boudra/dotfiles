@@ -8,3 +8,11 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 export LANG=en_US.UTF-8
 export EDITOR=vim
 export VISUAL=vim
+
+# Colors
+
+COLORS="$HOME/.vim/bundle/vim-hybrid-material/base16-material/base16-material.dark.sh"
+
+if [ -f $COLORS ]; then
+    source $COLORS
+fi
