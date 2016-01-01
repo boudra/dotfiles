@@ -1005,9 +1005,9 @@
 	<key>NSWindow Frame SUAutomaticUpdateAlert</key>
 	<string>414 527 616 174 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>465 331 770 381 0 0 1440 878 </string>
+	<string>465 331 796 473 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>543 488 570 377 0 0 1440 878 </string>
+	<string>224 175 570 377 0 0 1440 878 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>788 406 570 377 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -1170,7 +1170,7 @@
 			<key>Automatically Log</key>
 			<false/>
 			<key>BM Growl</key>
-			<true/>
+			<false/>
 			<key>Background Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -1712,6 +1712,8 @@
 					<string>\btelnet:([a-z0-9A-Z_]+@)?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\b</string>
 				</dict>
 			</array>
+			<key>Space</key>
+			<integer>0</integer>
 			<key>Sync Title</key>
 			<false/>
 			<key>Tags</key>
@@ -1725,7 +1727,7 @@
 			<key>Triggers</key>
 			<array/>
 			<key>Unlimited Scrollback</key>
-			<false/>
+			<true/>
 			<key>Use Bold Font</key>
 			<false/>
 			<key>Use Bright Bold</key>
@@ -1739,7 +1741,7 @@
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
-			<integer>0</integer>
+			<integer>1</integer>
 			<key>Working Directory</key>
 			<string>/Users/boudra</string>
 		</dict>
@@ -1856,7 +1858,7 @@
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<true/>
+	<false/>
 	<key>ShowPaneTitles</key>
 	<true/>
 	<key>SmartPlacement</key>
@@ -1868,7 +1870,7 @@
 	<key>SwitchWindowModifier</key>
 	<integer>6</integer>
 	<key>TabStyle</key>
-	<integer>0</integer>
+	<integer>3</integer>
 	<key>TabViewType</key>
 	<integer>0</integer>
 	<key>ThreeFingerEmulates</key>
