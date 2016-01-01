@@ -41,7 +41,7 @@ NeoBundle 'netrw.vim'
 NeoBundle 'fugitive.vim'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'takahirojin/gbr.vim'
-NeoBundle 'kristijanhusak/vim-hybrid-material'
+NeoBundle 'boudra/vim-hybrid-material'
 NeoBundle 'ntpeters/vim-better-whitespace'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'unblevable/quick-scope'
@@ -58,9 +58,12 @@ NeoBundle 'matze/vim-move'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tommcdo/vim-exchange'
 NeoBundle 'dbext.vim'
+NeoBundle 'tpope/vim-abolish'
+NeoBundle 'vim-scripts/Rename2'
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'mxw/vim-jsx'
 NeoBundle 'leafgarland/typescript-vim'
 NeoBundle 'marijnh/tern_for_vim'
 
@@ -89,10 +92,10 @@ NeoBundleCheck
 let mapleader=","
 
 let g:user_emmet_install_global = 0
-autocmd FileType html,css,blade EmmetInstall
-autocmd FileType html,css,blade imap <Tab> <C-y>,
-autocmd FileType html,css,blade nmap <Tab> <C-y>,
-autocmd FileType html,css,blade vmap <Tab> <C-y>,
+autocmd FileType html,css,blade,eelixir,scss EmmetInstall
+autocmd FileType html,css,blade,eelixir,scss imap <Tab> <C-y>,
+autocmd FileType html,css,blade,eelixir,scss nmap <Tab> <C-y>,
+autocmd FileType html,css,blade,eelixir,scss vmap <Tab> <C-y>,
 " autocmd FileType cpp BufWritePost * Neomake
 
 syntax on
@@ -157,6 +160,10 @@ colorscheme hybrid_material
 let g:airline_theme = 'hybrid'
 let g:airline_powerline_fonts = 1
 
+let g:startify_change_to_vcs_root = 0
+let g:startify_session_autoload = 0
+let g:startify_change_to_dir = 0
+
 highlight MatchParen gui=bold,underline,italic term=underline guibg=NONE guifg=white ctermbg=none ctermfg=none
 
 " Enable line highlighting on insert
@@ -184,7 +191,7 @@ map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
-nmap <Leader>e :CtrlPMixed<CR>
+nmap <Leader>e :CtrlP<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>n :enew<CR>
@@ -193,8 +200,11 @@ nmap <Leader>f <C-w><C-f>
 nmap gs :Gstatus<CR>
 nmap gb :Gbr<CR>
 nmap gv :Gbrowse<CR>
-nmap gp :Git pull<CR>
-nmap gP :Git push<CR>
+nmap gP :Dispatch git push<CR>
+nmap gp :Dispatch git pull<CR>
+
+" nmap <Leader>t :Dispatch mix test %<CR>
+autocmd FileType elixir nmap <Leader>t :Dispatch mix test %<C-r>=line(".")<CR><CR>
 
 nnoremap <C-p> :tabprevious<CR>
 nnoremap <C-n> :tabnext<CR>
@@ -247,11 +257,11 @@ set so=5
 
 set iskeyword-=_
 set autoindent
-set tabstop=4
-set softtabstop=4
 set undolevels=1000
 set title
-set shiftwidth=4
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
 set expandtab
 set regexpengine=1
 set wildignore=*.so,*.swp,*.zip,*.exe,*.bak,*.class
@@ -286,3 +296,4 @@ endif
 
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
+let g:jsx_ext_required = 0
