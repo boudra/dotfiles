@@ -35,7 +35,7 @@ Thumbs.db
 .\#*
 node_modules
 *.log
-vendor
+/vendor
 .sass-cache
 .eslintrc
 .phpcomplete_extended
