@@ -20,6 +20,10 @@
 	<false/>
 	<key>ClosingHotkeySwitchesSpaces</key>
 	<true/>
+	<key>ClosingTmuxTabKillsTmuxWindows</key>
+	<true/>
+	<key>ClosingTmuxTabKillsTmuxWindows_selection</key>
+	<integer>1</integer>
 	<key>CommandSelection</key>
 	<true/>
 	<key>Control</key>
@@ -1001,13 +1005,13 @@
 	<key>NSWindow Frame SUAutomaticUpdateAlert</key>
 	<string>414 527 616 174 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>555 217 796 473 0 0 1440 900 </string>
+	<string>465 331 770 381 0 0 1440 878 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>543 376 570 502 0 0 1440 878 </string>
+	<string>543 488 570 377 0 0 1440 878 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>643 206 570 501 0 0 1280 777 </string>
+	<string>788 406 570 377 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>204 45 570 501 0 0 1440 877 </string>
+	<string>4 0 1436 900 0 0 1440 900 </string>
 	<key>NeverWarnAboutShortLivedSessions_AE4D2292-20C5-47FD-A0A3-3F53868BABBF</key>
 	<true/>
 	<key>New Bookmarks</key>
@@ -1757,6 +1761,10 @@
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
+	<integer>0</integer>
+	<key>NoSyncNewWindowOrTabFromTmuxOpensTmux</key>
+	<true/>
+	<key>NoSyncNewWindowOrTabFromTmuxOpensTmux_selection</key>
 	<integer>0</integer>
 	<key>NoSyncPermissionToShowTip</key>
 	<false/>
