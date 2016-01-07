@@ -72,6 +72,11 @@ NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'tikhomirov/vim-glsl'
 
 NeoBundle 'sql.vim'
+NeoBundle 'mkarmona/colorsbox'
+
+" Elixir
+NeoBundle 'elixir-lang/vim-elixir'
+NeoBundle 'mattreduce/vim-mix'
 
 call neobundle#end()
 
@@ -272,6 +277,7 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
 
 autocmd filetype scss set sw=2
+autocmd filetype yaml set sw=2
 autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
 
 if(exists('breakindent'))
@@ -331,7 +337,7 @@ let g:used_javascript_libs = 'jquery,angularjs,angularui,underscore,lodash'
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release\|public\/js'
+let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release\|public\/js\|_projects\|_builds\|_temp'
 
 " Javascript
 let g:javascript_conceal_function   = "ƒ"
