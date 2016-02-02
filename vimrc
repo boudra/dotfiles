@@ -28,7 +28,6 @@ NeoBundle 'rhysd/vim-clang-format'
 NeoBundle 'a.vim'
 NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'xolox/vim-misc'
-NeoBundle 'xolox/vim-easytags'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'argtextobj.vim'
 NeoBundle 'Raimondi/delimitMate'
@@ -52,6 +51,9 @@ NeoBundle 'xsbeats/vim-blade'
 NeoBundle 'fatih/vim-go'
 NeoBundle 'matchit.zip'
 NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
+NeoBundle 'mhinz/vim-startify'
+NeoBundle 'rust-lang/rust.vim'
+NeoBundle 'matze/vim-move'
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
@@ -86,10 +88,11 @@ let g:angular_filename_convention = 'titlecased'
 
 let mapleader=","
 
-" Bind C-j to Emmet expander
-imap <C-j> <C-y>,
-vmap <C-j> <C-y>,
-nmap <C-j> <C-y>,
+let g:user_emmet_install_global = 0
+autocmd FileType html,css,blade EmmetInstall
+autocmd FileType html,css,blade imap <Tab> <C-y>,
+autocmd FileType html,css,blade nmap <Tab> <C-y>,
+autocmd FileType html,css,blade vmap <Tab> <C-y>,
 
 syntax on
 set cino=N-s
@@ -120,13 +123,15 @@ endif
 set linespace=1
 
 nnoremap <F5> :make<CR>
+nnoremap <Leader>m :silent Make<CR>
 
 " Switch from header to source and viceversa
 nnoremap <F4> :A<CR>
 
 nnoremap <F12> :colorscheme Tomorrow<enter>:TOhtml<enter>:colorscheme hybrid_material<enter>:w<enter>:!firefox file://%:p<enter>:!rm %:p<enter>:q<enter><enter>
 
-autocmd filetype cpp setl makeprg=make\ -j9\ -C\ ../build
+autocmd filetype cpp setl makeprg=make
+autocmd filetype elixir setl makeprg=mix\ compile
 
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
@@ -139,22 +144,6 @@ let g:mta_filetypes = {
 	\ 'php'   : 1,
     \ }
 
-let g:clang_format#auto_format = 0
-let g:clang_format#code_style = 'google'
-let g:clang_format#style_options = {
-    \ "AlwaysBreakTemplateDeclarations" : "true",
-    \ "BreakBeforeBraces" : "Allman",
-    \ "KeepEmptyLinesAtTheStartOfBlocks" : "true",
-    \ "PointerAlignment" : "Left",
-    \ "Standard" : "Cpp11",
-    \ "TabWidth" : "4",
-    \ "UseTab" : "Never",
-    \ "ColumnLimit" : "80",
-    \ "AccessModifierOffset" : "-4",
-    \ "AllowShortFunctionsOnASingleLine" : "None",
-    \ "AllowShortIfStatementsOnASingleLine" : "true",
-    \ }
-
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :silent <C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :slilent ClangFormat<CR>
 
@@ -165,9 +154,9 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
 
-let g:easytags_events = ['BufWritePost']
-let g:easytags_async = 1
-let g:easytags_dynamic_files = 2
+" let g:easytags_events = ['BufWritePost']
+" let g:easytags_async = 1
+" let g:easytags_dynamic_files = 2
 set tags=~/.vim/.vimtags
 
 " make YCM compatible with UltiSnips (using supertab)
@@ -212,8 +201,7 @@ map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
-nmap <Leader>e :CtrlP<CR>
-nmap <Leader>b :CtrlPBuffer<CR>
+nmap <Leader>e :CtrlPMixed<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>f <C-w><C-f>
@@ -292,9 +280,9 @@ endif
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_at_startup = 0
 " Use smartcase.
-let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_smart_case = 0
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 4
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
@@ -346,7 +334,6 @@ let g:javascript_conceal_this       = "@"
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_typescript_checkers = ['tslint', 'tsc']
 
-
 " quick-scope
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
@@ -354,3 +341,18 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:ag_working_path_mode="ra"
 
 set autoread
+
+if exists('$TMUX')
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
+
+"
+" let g:unite_source_file_rec_max_cache_files = 2000000
+" let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
+" let g:unite_source_grep_command='ag'
+" let g:unite_source_grep_default_opts='-i --line-numbers --nocolor --nogroup --hidden -p /Users/brennan/.agignore'
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
