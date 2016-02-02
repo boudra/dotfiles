@@ -54,6 +54,7 @@ NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'rust-lang/rust.vim'
 NeoBundle 'matze/vim-move'
+NeoBundle 'tpope/vim-repeat'
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
