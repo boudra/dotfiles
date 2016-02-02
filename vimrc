@@ -53,6 +53,7 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'rust-lang/rust.vim'
 NeoBundle 'matze/vim-move'
 NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tommcdo/vim-exchange'
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
