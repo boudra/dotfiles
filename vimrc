@@ -36,8 +36,10 @@ NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'godlygeek/tabular'
+NeoBundle 'netrw.vim'
 NeoBundle 'fugitive.vim'
 NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'takahirojin/gbr.vim'
 NeoBundle 'kristijanhusak/vim-hybrid-material'
 NeoBundle 'ntpeters/vim-better-whitespace'
 NeoBundle 'rking/ag.vim'
@@ -182,6 +184,8 @@ nmap <Leader>n :enew<CR>
 nmap <Leader>f <C-w><C-f>
 
 nmap gs :Gstatus<CR>
+nmap gb :Gbr<CR>
+nmap gv :Gbrowse<CR>
 nmap gp :Git pull<CR>
 nmap gP :Git push<CR>
 
