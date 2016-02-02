@@ -124,7 +124,7 @@ nnoremap <Leader>m :silent Make<CR>
 " Switch from header to source and viceversa
 nnoremap <F4> :A<CR>
 
-nnoremap <F12> :colorscheme Tomorrow<enter>:TOhtml<enter>:colorscheme hybrid_material<enter>:w<enter>:!firefox file://%:p<enter>:!rm %:p<enter>:q<enter><enter>
+nnoremap <F12> :colorscheme Tomorrow<enter>:TOhtml<enter>:colorscheme hybrid_material<enter>:w<enter>:!open file://%:p<enter>:sleep 1<enter>:!rm %:p<enter>:q<enter><enter>
 
 autocmd filetype cpp setl makeprg=make
 autocmd filetype elixir setl makeprg=mix\ compile
@@ -132,33 +132,10 @@ autocmd filetype elixir setl makeprg=mix\ compile
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
 
-let g:mta_filetypes = {
-    \ 'html'  : 1,
-    \ 'xhtml' : 1,
-    \ 'xml'   : 1,
-    \ 'jinja' : 1,
-	\ 'php'   : 1,
-    \ }
-
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :silent <C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :slilent ClangFormat<CR>
 
-let g:syntastic_cpp_check_header = 1
-let g:syntastic_cpp_auto_refresh_includes = 1
-let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall -Wno-long-long -pedantic'
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
-
-" let g:easytags_events = ['BufWritePost']
-" let g:easytags_async = 1
-" let g:easytags_dynamic_files = 2
 set tags=~/.vim/.vimtags
-
-" make YCM compatible with UltiSnips (using supertab)
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = "<tab>"
@@ -183,6 +160,8 @@ vmap <C-c> "+y
 vmap <C-x> "+c
 vmap <C-v> c<C-o>"+p
 
+nnoremap <silent> <C-l> :nohl<CR><C-l>
+
 noremap 0 ^
 noremap ^ 0
 
@@ -192,7 +171,6 @@ noremap ] }
 inoremap jj <ESC>
 
 map <Leader>j <Plug>(easymotion-j)
-
 map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
@@ -200,6 +178,7 @@ nmap <Leader>w :w<CR>
 nmap <Leader>e :CtrlPMixed<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
+nmap <Leader>n :enew<CR>
 nmap <Leader>f <C-w><C-f>
 
 nmap gs :Gstatus<CR>
@@ -226,12 +205,15 @@ omap / <Plug>(easymotion-tn)
 map  n <Plug>(easymotion-next)
 map  N <Plug>(easymotion-prev)
 
-let g:dbgPavimPort = 9009
-let g:dbgPavimBreakAtEntry = 0
+nnoremap ; :
 
-"nmap <Tab> :NERDTreeToggle<CR>
-"imap <Tab> <Plug>snipMateTrigger
+nnoremap j gj
+nnoremap k gk
 
+command! W w
+command! Q q
+
+set hidden
 set foldmethod=syntax
 set textwidth=0
 set wrapmargin=0
@@ -239,6 +221,8 @@ set cursorline
 set foldlevel=1
 set foldlevelstart=20
 set formatoptions=cq
+set hlsearch
+set incsearch
 
 set laststatus=2
 set wrap
@@ -251,14 +235,15 @@ set vb t_vb=
 set so=5
 
 set iskeyword-=_
-set smartindent
+set autoindent
 set tabstop=4
 set softtabstop=4
+set undolevels=1000
+set title
 set shiftwidth=4
 set expandtab
 set regexpengine=1
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
-set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+set wildignore=*.so,*.swp,*.zip,*.exe,*.bak,*.class
 
 autocmd filetype scss set sw=2
 autocmd filetype yaml set sw=2
@@ -267,7 +252,6 @@ autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
 if(exists('breakindent'))
     set breakindent
 endif
-
 
 " Indent guides
 let g:indent_guides_guide_size = 1
@@ -287,16 +271,11 @@ let g:ag_working_path_mode="ra"
 set autoread
 
 if exists('$TMUX')
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 else
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
 
-"
-" let g:unite_source_file_rec_max_cache_files = 2000000
-" let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
-" let g:unite_source_grep_command='ag'
-" let g:unite_source_grep_default_opts='-i --line-numbers --nocolor --nogroup --hidden -p /Users/brennan/.agignore'
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
