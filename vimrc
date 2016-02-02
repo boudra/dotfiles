@@ -265,11 +265,14 @@ autocmd filetype yaml set sw=2
 autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
 
 if(exists('breakindent'))
-	set breakindent
+    set breakindent
 endif
 
 
+" Indent guides
 let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 1
+let g:indent_guides_enable_on_vim_startup = 1
 
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
