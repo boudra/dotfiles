@@ -5,6 +5,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )
 FILES=$( find ${DIR}/* -maxdepth 0 \
     -not -name 'install.sh' \
     -not -name '.git' \
+    -not -name 'README.md' \
     -not -name '.gitignore' \
     -not -name '.gitmodules' \
     -not -path .

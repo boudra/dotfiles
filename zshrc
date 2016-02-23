@@ -16,3 +16,12 @@ bindkey '\eOA' history-beginning-search-backward
 bindkey '\e[A' history-beginning-search-backward
 bindkey '\eOB' history-beginning-search-forward
 bindkey '\e[B' history-beginning-search-forward
+
+function new-tmux-session {
+    tmux new-session -As `basename $PWD`
+}
+
+# Aliases
+
+alias e="$EDITOR"
+alias tnew="new-tmux-session"

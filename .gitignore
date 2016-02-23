@@ -5,3 +5,5 @@
 !fonts/powerline-fonts
 /vim/.vimtags
 /vim/.netrwhist
+/tmux/plugins/*
+!/tmux/plugins/tpm
