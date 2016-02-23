@@ -45,8 +45,8 @@ for FILE in $FILES; do
         read -r -p "Please specify the author name to use for git (usually your full name): " NAME
         rm -rf ${DEST}
         cp ${SRC} ${DEST}
-        sed -i "s/{{\s*EMAIL\s*}}/$EMAIL/g" ${DEST}
-        sed -i "s/{{\s*NAME\s*}}/$NAME/g" ${DEST}
+        sed -i '' "s/{{\ EMAIL\ }}/$EMAIL/" ${DEST}
+        sed -i '' "s/{{\ NAME\ }}/$NAME/" ${DEST}
         continue
     fi
 
