@@ -15,7 +15,7 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'Shougo/vimproc.vim'
-NeoBundle 'scrooloose/syntastic'
+NeoBundle 'benekastah/neomake'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
@@ -56,6 +56,7 @@ NeoBundle 'rust-lang/rust.vim'
 NeoBundle 'matze/vim-move'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tommcdo/vim-exchange'
+NeoBundle 'dbext.vim'
 
 " Javascript
 NeoBundle 'pangloss/vim-javascript'
@@ -91,6 +92,7 @@ autocmd FileType html,css,blade EmmetInstall
 autocmd FileType html,css,blade imap <Tab> <C-y>,
 autocmd FileType html,css,blade nmap <Tab> <C-y>,
 autocmd FileType html,css,blade vmap <Tab> <C-y>,
+" autocmd FileType cpp BufWritePost * Neomake
 
 syntax on
 set cino=N-s
@@ -115,6 +117,10 @@ if has("gui_running")
     elseif has("gui_win32")
         set guifont=Consolas:h11:cANSI
     endif
+    " Indent guides
+    let g:indent_guides_guide_size = 1
+    let g:indent_guides_start_level = 1
+    let g:indent_guides_enable_on_vim_startup = 1
 endif
 
 
@@ -225,7 +231,7 @@ set cursorline
 set foldlevel=1
 set foldlevelstart=20
 set formatoptions=cq
-set hlsearch
+set nohlsearch
 set incsearch
 
 set laststatus=2
@@ -257,11 +263,6 @@ if(exists('breakindent'))
     set breakindent
 endif
 
-" Indent guides
-let g:indent_guides_guide_size = 1
-let g:indent_guides_start_level = 1
-let g:indent_guides_enable_on_vim_startup = 1
-
 " CtrlP
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = 'node_modules\|vendor\|app_release\|public\/js\|_projects\|_builds\|_temp'
@@ -283,3 +284,4 @@ else
 endif
 
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
