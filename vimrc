@@ -92,10 +92,10 @@ NeoBundleCheck
 let mapleader=","
 
 let g:user_emmet_install_global = 0
-autocmd FileType html,css,blade,eelixir,scss EmmetInstall
-autocmd FileType html,css,blade,eelixir,scss imap <Tab> <C-y>,
-autocmd FileType html,css,blade,eelixir,scss nmap <Tab> <C-y>,
-autocmd FileType html,css,blade,eelixir,scss vmap <Tab> <C-y>,
+autocmd FileType html,css,php,blade,eelixir,scss EmmetInstall
+autocmd FileType html,css,php,blade,eelixir,scss imap <Tab> <C-y>,
+autocmd FileType html,css,php,blade,eelixir,scss nmap <Tab> <C-y>,
+autocmd FileType html,css,php,blade,eelixir,scss vmap <Tab> <C-y>,
 " autocmd FileType cpp BufWritePost * Neomake
 
 syntax on
