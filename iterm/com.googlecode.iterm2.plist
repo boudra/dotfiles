@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AboutToPasteTabsWithCancel</key>
+	<true/>
+	<key>AboutToPasteTabsWithCancel_selection</key>
+	<integer>0</integer>
 	<key>AdjustWindowForFontSizeChange</key>
 	<true/>
 	<key>AllowClipboardAccess</key>
@@ -1005,9 +1009,9 @@
 	<key>NSWindow Frame SUAutomaticUpdateAlert</key>
 	<string>414 527 616 174 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>465 331 796 473 0 0 1440 900 </string>
+	<string>465 292 937 512 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>224 175 570 377 0 0 1440 878 </string>
+	<string>4 0 570 377 0 0 1440 878 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>788 406 570 377 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
