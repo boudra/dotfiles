@@ -1,1 +1,2 @@
-prefix = ${HOME}/.node
+prefix=${HOME}/.node
+unsafe-perm=true

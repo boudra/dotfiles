@@ -2,7 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="pygmalion"
-TERM=screen-256color
+TERM=xterm-256color
 
 DISABLE_AUTO_TITLE="true"
 
@@ -23,7 +23,22 @@ function new-tmux-session {
 
 # Aliases
 
-alias e="$EDITOR"
 alias tnew="new-tmux-session"
 alias dcm="docker-machine"
 alias dcp="docker-compose"
+alias e="$EDITOR"
+
+function fe() {
+  e $(git ls-files -co --exclude-standard | peco --initial-filter SmartCase --prompt "> " --layout bottom-up)
+}
+
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then source "/$HOME/google-cloud-sdk/path.zsh.inc"; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then source "/$HOME/google-cloud-sdk/completion.zsh.inc"; fi

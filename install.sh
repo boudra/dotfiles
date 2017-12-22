@@ -32,6 +32,7 @@ for FILE in $FILES; do
     if [ -e $DEST ]; then
 
         if [ $OVERWRITE -eq 0 ]; then
+            echo $DEST
             read -r -p "\`.$NAME' already exists. Do you want to overwrite it?  [y/N] " RESPONSE
             if ! [[ $RESPONSE =~ ^([yY][eE][sS]|[yY])$  ]]; then
                 continue
