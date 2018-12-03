@@ -40,3 +40,4 @@ node_modules
 .eslintrc
 .phpcomplete_extended
 codeception.yml
+todo.md

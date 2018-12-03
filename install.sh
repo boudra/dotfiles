@@ -2,12 +2,13 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )
 
-FILES=$( find ${DIR}/* -maxdepth 0 \
+FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
     -not -name 'install.sh' \
     -not -name '.git' \
     -not -name 'README.md' \
     -not -name '.gitignore' \
     -not -name '.gitmodules' \
+    -not -name 'config' \
     -not -path .
 )
 
@@ -24,16 +25,19 @@ shift $((OPTIND-1))
 
 for FILE in $FILES; do
 
+    FILE=$(echo $FILE | sed "s!^$DIR/!!")
+
     NAME=$(basename $FILE)
-    DEST=${HOME}/.${NAME}
-    SRC=${DIR}/${NAME}
+    DEST=$HOME/.$FILE
+    SRC=${DIR}/${FILE}
     OVERWRITE=$GLOBAL_OVERWRITE
+
+    echo "Installing $SRC to $DEST ..."
 
     if [ -e $DEST ]; then
 
         if [ $OVERWRITE -eq 0 ]; then
-            echo $DEST
-            read -r -p "\`.$NAME' already exists. Do you want to overwrite it?  [y/N] " RESPONSE
+            read -r -p "\`$DEST' already exists. Do you want to overwrite it?  [y/N] " RESPONSE
             if ! [[ $RESPONSE =~ ^([yY][eE][sS]|[yY])$  ]]; then
                 continue
             fi
@@ -51,6 +55,7 @@ for FILE in $FILES; do
         continue
     fi
 
+    mkdir -p $(dirname $DEST)
     rm -rf ${DEST}
     ln -s ${SRC} ${DEST}
 

@@ -29,6 +29,7 @@ if dein#load_state('~/.vim/bundle')
 
   call dein#add('slashmili/alchemist.vim')
   call dein#add('elixir-lang/vim-elixir')
+  call dein#add('mhinz/vim-mix-format')
 
   call dein#add('mattn/emmet-vim')
   call dein#add('christoomey/vim-tmux-navigator')
@@ -45,6 +46,9 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('fatih/vim-go')
 
   call dein#add('terryma/vim-multiple-cursors')
+  call dein#add('octol/vim-cpp-enhanced-highlight')
+
+  call dein#add('sbdchd/neoformat')
 
   call dein#end()
   call dein#save_state()
@@ -214,7 +218,7 @@ set nobackup
 set lazyredraw
 set noswapfile
 set vb t_vb=
-set so=5
+set so=0
 
 set iskeyword-=_
 set autoindent
@@ -228,6 +232,7 @@ set regexpengine=1
 set wildignore=*.so,*.swp,*.zip,*.exe,*.bak,*.class
 
 autocmd filetype scss set sw=2
+autocmd filetype c set sw=4
 autocmd filetype yaml set sw=2
 autocmd filetype javascript set sw=2
 autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
@@ -235,7 +240,7 @@ autocmd filetype elm set sw=4
 au BufRead,BufNewFile *.json.mustache setfiletype json
 
 if(exists('breakindent'))
-    set breakindent
+  set breakindent
 endif
 
 " CtrlP
@@ -255,13 +260,13 @@ let g:tmux_navigator_disable_when_zoomed = 1
 nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
 
 if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 else
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
 
 " Italics
@@ -272,17 +277,7 @@ let g:jsx_ext_required = 0
 
 let g:deoplete#enable_at_startup = 1
 
-let g:elm_format_autosave = 1
-let g:elm_format_fail_silently = 1
+let g:elm_format_autosave = 0
+let g:elm_format_fail_silently = 0
 
-" ale
-
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_sign_column_always = 1
-
-let g:ale_sign_error = 'E'
-let g:ale_sign_warning = 'W'
-
-let g:ale_fixers = {
-      \ 'elixir': ['remove_trailing_lines', 'trim_whitespace']
-      \}
+" NeoFormat
