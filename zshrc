@@ -1,5 +1,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
+export SHELL=$ZSH_NAME
 
 ZSH_THEME="pygmalion"
 TERM=xterm-256color
