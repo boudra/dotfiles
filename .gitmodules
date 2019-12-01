@@ -1,9 +1,6 @@
 [submodule "oh-my-zsh"]
 	path = oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
-[submodule "vim/bundle/neobundle.vim"]
-	path = vim/bundle/neobundle.vim
-	url = https://github.com/Shougo/neobundle.vim
 [submodule "fonts/powerline-fonts"]
 	path = fonts/powerline-fonts
 	url = git@github.com:powerline/fonts.git
@@ -16,3 +13,6 @@
 [submodule "asdf"]
 	path = sdf
 	url = https://github.com/asdf-vm/asdf.git
+[submodule "fzf"]
+	path = fzf
+	url = https://github.com/junegunn/fzf.git

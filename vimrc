@@ -17,9 +17,7 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('~/.vim/bundle/repos/github.com/Shougo/dein.vim')
 
   call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
-  call dein#add('Shougo/deoplete.nvim')
 
-  call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('ntpeters/vim-better-whitespace')
   call dein#add('easymotion/vim-easymotion')
 
@@ -29,7 +27,6 @@ if dein#load_state('~/.vim/bundle')
 
   call dein#add('slashmili/alchemist.vim')
   call dein#add('elixir-lang/vim-elixir')
-  call dein#add('mhinz/vim-mix-format')
 
   call dein#add('mattn/emmet-vim')
   call dein#add('christoomey/vim-tmux-navigator')
@@ -43,12 +40,18 @@ if dein#load_state('~/.vim/bundle')
 
   call dein#add('tomtom/tcomment_vim')
   call dein#add('elmcast/elm-vim')
-  call dein#add('fatih/vim-go')
+  " call dein#add('fatih/vim-go')
+
+  call dein#add('tpope/vim-surround')
 
   call dein#add('terryma/vim-multiple-cursors')
   call dein#add('octol/vim-cpp-enhanced-highlight')
 
   call dein#add('sbdchd/neoformat')
+  " call dein#add('neoclide/coc.nvim', {'merged':0, 'rev': 'release'})
+
+  call dein#add('~/.fzf')
+  call dein#add('junegunn/fzf.vim')
 
   call dein#end()
   call dein#save_state()
@@ -58,11 +61,8 @@ filetype off
 
 let mapleader=","
 
-let g:user_emmet_install_global = 0
-autocmd FileType html,css,php,blade,eelixir,scss EmmetInstall
-autocmd FileType html,css,php,blade,eelixir,scss imap <Tab> <C-y>,
-autocmd FileType html,css,php,blade,eelixir,scss nmap <Tab> <C-y>,
-autocmd FileType html,css,php,blade,eelixir,scss vmap <Tab> <C-y>,
+autocmd FileType html,css,javascript.jsx,php,blade,eelixir,scss map <buffer> <Tab> <Plug>(emmet-expand-abbr)
+autocmd FileType html,css,javascript.jsx,php,blade,eelixir,scss imap <buffer> <Tab> <Plug>(emmet-expand-abbr)
 " autocmd FileType cpp BufWritePost * Neomake
 
 syntax on
@@ -114,16 +114,11 @@ set suffixesadd=".cpp .hpp .java .php .html"
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :silent <C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :slilent ClangFormat<CR>
 
-" better key bindings for UltiSnipsExpandTrigger
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
 set t_Co=256
 let g:enable_bold_font = 1
 set termguicolors
 set background=dark
-let ayucolor="dark"
+let ayucolor="mirage"
 colorscheme ayu
 let g:airline_theme = 'hybrid'
 let g:airline_powerline_fonts = 1
@@ -159,11 +154,11 @@ map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
-nmap <Leader>e :CtrlP<CR>
+nmap <Leader>e :Files<CR>
+nmap <Leader>g :GGrep<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>n :enew<CR>
-nmap <Leader>f <C-w><C-f>
 
 nmap gs :Gstatus<CR>
 nmap gb :Gbr<CR>
@@ -231,22 +226,19 @@ set expandtab
 set regexpengine=1
 set wildignore=*.so,*.swp,*.zip,*.exe,*.bak,*.class
 
-autocmd filetype scss set sw=2
-autocmd filetype c set sw=4
-autocmd filetype yaml set sw=2
-autocmd filetype javascript set sw=2
+autocmd filetype scss set sw=2 expandtab
+autocmd filetype html set sw=2 expandtab
+autocmd filetype c set sw=4 expandtab
+autocmd filetype yaml set sw=2 expandtab
+autocmd filetype javascript set sw=2 expandtab
 autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
-autocmd filetype elm set sw=4
+autocmd filetype elm set sw=4 expandtab
+autocmd filetype elixir set sw=2 expandtab
 au BufRead,BufNewFile *.json.mustache setfiletype json
 
 if(exists('breakindent'))
   set breakindent
 endif
-
-" CtrlP
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_root_markers = []
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
 " quick-scope
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -275,9 +267,12 @@ let &t_ZR="\e[23m"
 
 let g:jsx_ext_required = 0
 
-let g:deoplete#enable_at_startup = 1
-
 let g:elm_format_autosave = 0
 let g:elm_format_fail_silently = 0
 
-" NeoFormat
+" Command for git grep
+" - fzf#vim#grep(command, with_column, [options], [fullscreen])
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number '.shellescape(<q-args>), 0,
+  \   { 'dir': systemlist('git rev-parse --show-toplevel')[0] }, <bang>0)

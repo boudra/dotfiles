@@ -1,14 +1,14 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="pygmalion"
+ZSH_THEME="af-magic"
 TERM=xterm-256color
 
 DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 DISABLE_AUTO_UPDATE="true"
-plugins=(git svn svn-fast-info vi-mode vim-interaction)
+plugins=(git vi-mode vim-interaction)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -23,10 +23,15 @@ function new-tmux-session {
 
 # Aliases
 
-alias tnew="new-tmux-session"
 alias dcm="docker-machine"
 alias dcp="docker-compose"
 alias e="$EDITOR"
+alias gcp="gc \"$@\" && gp"
+
+
+function t() {
+  tmux attach -t $1 || tmux new -s $1
+}
 
 function fe() {
   e $(git ls-files -co --exclude-standard | peco --initial-filter SmartCase --prompt "> " --layout bottom-up)
@@ -35,10 +40,10 @@ function fe() {
 . $HOME/.asdf/asdf.sh
 . $HOME/.asdf/completions/asdf.bash
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+eval "$(direnv hook zsh)"
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then source "/$HOME/google-cloud-sdk/path.zsh.inc"; fi
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.private.zshrc ] && source ~/.private.zshrc
 
-# The next line enables shell command completion for gcloud.
-if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then source "/$HOME/google-cloud-sdk/completion.zsh.inc"; fi
+export FZF_DEFAULT_COMMAND='ag -g ""'
+export PATH="/usr/local/opt/curl/bin:$PATH"

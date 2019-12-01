@@ -12,6 +12,9 @@ FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
     -not -path .
 )
 
+
+${DIR}/fzf/install
+
 GLOBAL_OVERWRITE=0
 
 while getopts "f" o; do

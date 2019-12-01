@@ -41,3 +41,4 @@ node_modules
 .phpcomplete_extended
 codeception.yml
 todo.md
+.envrc
