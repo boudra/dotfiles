@@ -9,6 +9,8 @@ export LANG=en_US.UTF-8
 export EDITOR=nvim
 export VISUAL=nvim
 
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 # Colors
 
 COLORS="$HOME/.vim/bundle/vim-hybrid-material/base16-material/base16-material.dark.sh"
