@@ -8,3 +8,4 @@
 /tmux/plugins/*
 !/tmux/plugins/tpm
 .private_zshrc
+config/fish/fisher

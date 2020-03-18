@@ -34,24 +34,27 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('honza/vim-snippets')
   call dein#add('mhinz/vim-startify')
   call dein#add('pangloss/vim-javascript')
-  call dein#add('mxw/vim-jsx')
   call dein#add('tpope/vim-fugitive')
+  call dein#add('MaxMEllon/vim-jsx-pretty')
   call dein#add('tpope/vim-rhubarb')
 
   call dein#add('tomtom/tcomment_vim')
-  call dein#add('elmcast/elm-vim')
+  call dein#add('andys8/vim-elm-syntax')
   " call dein#add('fatih/vim-go')
+  call dein#add('junegunn/goyo.vim')
 
   call dein#add('tpope/vim-surround')
+  call dein#add('dag/vim-fish')
 
   call dein#add('terryma/vim-multiple-cursors')
   call dein#add('octol/vim-cpp-enhanced-highlight')
 
   call dein#add('sbdchd/neoformat')
-  " call dein#add('neoclide/coc.nvim', {'merged':0, 'rev': 'release'})
 
   call dein#add('~/.fzf')
   call dein#add('junegunn/fzf.vim')
+
+  " call dein#add('evanleck/vim-svelte')
 
   call dein#end()
   call dein#save_state()
@@ -61,8 +64,13 @@ filetype off
 
 let mapleader=","
 
-autocmd FileType html,css,javascript.jsx,php,blade,eelixir,scss map <buffer> <Tab> <Plug>(emmet-expand-abbr)
-autocmd FileType html,css,javascript.jsx,php,blade,eelixir,scss imap <buffer> <Tab> <Plug>(emmet-expand-abbr)
+autocmd bufnewfile,bufread *.tsx set filetype=typescript.tsx
+autocmd bufnewfile,bufread *.jsx set filetype=javascript.jsx
+
+autocmd FileType html,css,javascript,javascript.jsx,php,blade,svelte,eelixir,scss map <buffer> <expr> <Tab> emmet#expandAbbrIntelligent("\<tab>")
+autocmd FileType html,css,javascript,javascript.jsx,php,blade,svelte,eelixir,scss imap <buffer> <expr> <Tab> emmet#expandAbbrIntelligent("\<tab>")
+au BufRead,BufNewFile *.md setlocal textwidth=0 wrapmargin=0 wrap linebreak
+
 " autocmd FileType cpp BufWritePost * Neomake
 
 syntax on
@@ -121,7 +129,7 @@ set background=dark
 let ayucolor="mirage"
 colorscheme ayu
 let g:airline_theme = 'hybrid'
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 
 let g:startify_change_to_vcs_root = 0
 let g:startify_session_autoload = 0
@@ -265,14 +273,17 @@ endif
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
 
-let g:jsx_ext_required = 0
-
-let g:elm_format_autosave = 0
-let g:elm_format_fail_silently = 0
-
 " Command for git grep
 " - fzf#vim#grep(command, with_column, [options], [fullscreen])
 command! -bang -nargs=* GGrep
   \ call fzf#vim#grep(
   \   'git grep --line-number '.shellescape(<q-args>), 0,
   \   { 'dir': systemlist('git rev-parse --show-toplevel')[0] }, <bang>0)
+
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.elm syntax off | Neoformat | syntax on
+augroup END
+
+nnoremap u :syntax off \| undo \| syntax on<CR>
+nnoremap <C-r> :syntax off \| redo \| syntax on<CR>

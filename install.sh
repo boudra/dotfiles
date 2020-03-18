@@ -14,6 +14,7 @@ FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
 
 
 ${DIR}/fzf/install
+curl https://git.io/fisher --create-dirs -sLo ${DIR}/config/fish/functions/fisher.fish
 
 GLOBAL_OVERWRITE=0
 

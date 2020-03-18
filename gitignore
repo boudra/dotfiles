@@ -42,3 +42,5 @@ node_modules
 codeception.yml
 todo.md
 .envrc
+/dist
+/.cache
