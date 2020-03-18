@@ -7,8 +7,6 @@ fish_vi_key_bindings
 
 eval (direnv hook fish)
 
-if not functions -q fisher
-
 set -g fisher_path ~/.config/fish/fisher
 set -x FZF_DEFAULT_COMMAND "ag -g ''"
 set -x FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
