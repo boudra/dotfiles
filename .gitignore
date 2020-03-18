@@ -9,3 +9,4 @@
 !/tmux/plugins/tpm
 .private_zshrc
 config/fish/fisher
+config/fish/functions/fisher.fish
