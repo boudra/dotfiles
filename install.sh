@@ -14,7 +14,6 @@ FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
 
 
 ${DIR}/fzf/install
-curl https://git.io/fisher --create-dirs -sLo ${DIR}/config/fish/functions/fisher.fish
 
 GLOBAL_OVERWRITE=0
 
@@ -66,3 +65,8 @@ for FILE in $FILES; do
     echo "$DEST installed."
 
 done
+
+curl https://git.io/fisher --create-dirs -sLo ${DIR}/config/fish/functions/fisher.fish
+fish -c fisher
+
+curl -sfL https://direnv.net/install.sh | bash

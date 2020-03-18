@@ -8,10 +8,6 @@ fish_vi_key_bindings
 eval (direnv hook fish)
 
 if not functions -q fisher
-    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-    fish -c fisher
-end
 
 set -g fisher_path ~/.config/fish/fisher
 set -x FZF_DEFAULT_COMMAND "ag -g ''"
