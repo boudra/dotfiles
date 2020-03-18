@@ -18,11 +18,17 @@ Dotfiles I use on a daily basis.
 
 ## Requeriments
 
+#### Fish
+
 Use ```fish``` as your user's default shell, you can enable it after installing with:
 
 ```
 chsh -s $(which fish)
 ```
+
+#### JetBrains Mono
+
+https://www.jetbrains.com/lp/mono/#how-to-install
 
 ## Installation
 
