@@ -13,7 +13,7 @@ FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
 )
 
 
-${DIR}/fzf/install
+${DIR}/fzf/install --key-bindings --completion --no-update-rc
 
 GLOBAL_OVERWRITE=0
 
@@ -66,7 +66,7 @@ for FILE in $FILES; do
 
 done
 
+curl -sfL https://direnv.net/install.sh | bash
+
 curl https://git.io/fisher --create-dirs -sLo ${DIR}/config/fish/functions/fisher.fish
 fish -c fisher
-
-curl -sfL https://direnv.net/install.sh | bash

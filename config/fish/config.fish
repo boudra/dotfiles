@@ -22,4 +22,4 @@ function t
   tmux attach -t $argv[1] || tmux new -s $argv[1]
 end
 
-source /usr/local/opt/asdf/asdf.fish
+source ~/.asdf/asdf.fish
