@@ -1,6 +1,6 @@
 # Mohamed Boudra's dotfiles
 
-Dotfiles I use on a daily basis.
+Dotfiles I use on a daily basis for Arch Linux and OS X.
 
 ## Main Components
 
@@ -10,6 +10,7 @@ Dotfiles I use on a daily basis.
 * **Nvim** as the main editor
 * **Tmux** as the terminal multiplexer
 * **Asdf** version manager
+* **ripgrep** file search
 * **kitty** as the terminal emulator
 
 ## Linux
@@ -25,6 +26,20 @@ Use ```fish``` as your user's default shell, you can enable it after installing 
 ```
 chsh -s $(which fish)
 ```
+
+Sign out and sign in for it to take effect.
+
+#### ripgrep
+
+```
+# OS X
+brew install ripgrep
+
+# Arch Linux
+pacman -S ripgrep
+```
+
+Other platforms: https://github.com/BurntSushi/ripgrep#installation
 
 #### JetBrains Mono
 

@@ -163,7 +163,7 @@ nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
 nmap <Leader>e :Files<CR>
-nmap <Leader>g :GGrep<CR>
+nmap <Leader>g :Rg<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>n :enew<CR>
