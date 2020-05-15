@@ -5,11 +5,12 @@ fish_vi_key_bindings
 
 . ~/.config/fish/aliases.fish
 
-eval (direnv hook fish)
-
 set -g fisher_path ~/.config/fish/fisher
 set -x FZF_DEFAULT_COMMAND "ag -g ''"
 set -x FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
+set -gx PATH $PATH $HOME/.bin
+
+eval (direnv hook fish)
 
 set fish_function_path $fish_function_path[1] $fisher_path/functions $fish_function_path[2..-1]
 set fish_complete_path $fish_complete_path[1] $fisher_path/completions $fish_complete_path[2..-1]
