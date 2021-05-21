@@ -1,5 +1,4 @@
 set -x EDITOR nvim
-set -x TERM xterm-256color
 
 fish_vi_key_bindings
 
@@ -9,6 +8,7 @@ set -g fisher_path ~/.config/fish/fisher
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --follow --glob "!.git"'
 set -x FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -gx PATH $PATH $HOME/.bin
+set -gx PATH $PATH $HOME/.local/bin
 
 eval (direnv hook fish)
 
@@ -21,6 +21,10 @@ end
 
 function t
   tmux attach -t $argv[1] || tmux new -s $argv[1]
+end
+
+if test -z "$SSH_AGENT_PID"
+  eval (ssh-agent -c | head -n -1)
 end
 
 source ~/.asdf/asdf.fish

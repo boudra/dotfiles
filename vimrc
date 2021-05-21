@@ -35,12 +35,13 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('mhinz/vim-startify')
   call dein#add('pangloss/vim-javascript')
   call dein#add('tpope/vim-fugitive')
+  call dein#add('tpope/vim-abolish')
   call dein#add('MaxMEllon/vim-jsx-pretty')
   call dein#add('tpope/vim-rhubarb')
 
   call dein#add('tomtom/tcomment_vim')
-  call dein#add('andys8/vim-elm-syntax')
   " call dein#add('fatih/vim-go')
+  call dein#add('ElmCast/elm-vim')
   call dein#add('junegunn/goyo.vim')
 
   call dein#add('tpope/vim-surround')
@@ -54,11 +55,14 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('~/.fzf')
   call dein#add('junegunn/fzf.vim')
 
-  " call dein#add('evanleck/vim-svelte')
+  call dein#add('evanleck/vim-svelte')
 
   call dein#end()
   call dein#save_state()
+
+  call map(dein#check_clean(), "delete(v:val, 'rf')")
 endif
+
 
 filetype off
 
@@ -75,6 +79,7 @@ au BufRead,BufNewFile *.md setlocal textwidth=0 wrapmargin=0 wrap linebreak
 
 syntax on
 set cino=N-s
+" set re=2
 
 " display indentation guides
 set list listchars=tab:▸\ ,trail:.,extends:»,precedes:«,nbsp:×,eol:↲
@@ -107,6 +112,7 @@ set linespace=1
 
 nnoremap <F5> :make<CR>
 nnoremap <Leader>m :silent Make<CR>
+nnoremap <Leader>f :Neoformat<CR>
 
 " Switch from header to source and viceversa
 nnoremap <F4> :A<CR>
@@ -216,7 +222,7 @@ set incsearch
 set laststatus=2
 set wrap
 set number
-set relativenumber
+set norelativenumber
 set nobackup
 set lazyredraw
 set noswapfile
@@ -239,6 +245,7 @@ autocmd filetype html set sw=2 expandtab
 autocmd filetype c set sw=4 expandtab
 autocmd filetype yaml set sw=2 expandtab
 autocmd filetype javascript set sw=2 expandtab
+autocmd filetype javascript.jsx set sw=2 expandtab
 autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
 autocmd filetype elm set sw=4 expandtab
 autocmd filetype elixir set sw=2 expandtab
@@ -273,6 +280,8 @@ endif
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
 
+cmap w!! w !sudo tee > /dev/null %
+
 " Command for git grep
 " - fzf#vim#grep(command, with_column, [options], [fullscreen])
 command! -bang -nargs=* GGrep
@@ -280,10 +289,12 @@ command! -bang -nargs=* GGrep
   \   'git grep --line-number '.shellescape(<q-args>), 0,
   \   { 'dir': systemlist('git rev-parse --show-toplevel')[0] }, <bang>0)
 
-augroup fmt
-  autocmd!
-  autocmd BufWritePre *.elm syntax off | Neoformat | syntax on
-augroup END
+" augroup fmt
+"   autocmd!
+"   autocmd BufWritePre *.elm syntax off | Neoformat | syntax on
+" augroup END
 
-nnoremap u :syntax off \| undo \| syntax on<CR>
-nnoremap <C-r> :syntax off \| redo \| syntax on<CR>
+" nnoremap u :syntax off \| undo \| syntax on<CR>
+" nnoremap <C-r> :syntax off \| redo \| syntax on<CR>
+
+set backupcopy=yes
