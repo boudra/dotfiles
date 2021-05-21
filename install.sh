@@ -12,10 +12,11 @@ FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
     -not -path .
 )
 
+git -C ${DIR} submodule update --init --recursive
 
 ${DIR}/fzf/install --key-bindings --completion --no-update-rc
 
-GLOBAL_OVERWRITE=0
+GLOBAL_OVERWRITE=1
 
 while getopts "f" o; do
     case "${o}" in
@@ -69,4 +70,4 @@ done
 curl -sfL https://direnv.net/install.sh | bash
 
 curl https://git.io/fisher --create-dirs -sLo ${DIR}/config/fish/functions/fisher.fish
-fish -c fisher
+fish -c fisher update

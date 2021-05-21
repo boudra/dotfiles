@@ -27,11 +27,12 @@ if dein#load_state('~/.vim/bundle')
 
   call dein#add('slashmili/alchemist.vim')
   call dein#add('elixir-lang/vim-elixir')
+  call dein#add('rust-lang/rust.vim')
+  call dein#add('evanleck/vim-svelte')
+  call dein#add('leafgarland/typescript-vim')
 
   call dein#add('mattn/emmet-vim')
   call dein#add('christoomey/vim-tmux-navigator')
-  call dein#add('SirVer/ultisnips')
-  call dein#add('honza/vim-snippets')
   call dein#add('mhinz/vim-startify')
   call dein#add('pangloss/vim-javascript')
   call dein#add('tpope/vim-fugitive')
@@ -40,6 +41,11 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('tpope/vim-rhubarb')
 
   call dein#add('tomtom/tcomment_vim')
+  call dein#add('andys8/vim-elm-syntax')
+  call dein#add('purescript-contrib/purescript-vim')
+  call dein#add('vmchale/dhall-vim')
+  " call dein#add('reasonml-editor/vim-reason-plus')
+  call dein#add('jordwalke/vim-reasonml')
   " call dein#add('fatih/vim-go')
   call dein#add('ElmCast/elm-vim')
   call dein#add('junegunn/goyo.vim')
@@ -71,8 +77,10 @@ let mapleader=","
 autocmd bufnewfile,bufread *.tsx set filetype=typescript.tsx
 autocmd bufnewfile,bufread *.jsx set filetype=javascript.jsx
 
-autocmd FileType html,css,javascript,javascript.jsx,php,blade,svelte,eelixir,scss map <buffer> <expr> <Tab> emmet#expandAbbrIntelligent("\<tab>")
-autocmd FileType html,css,javascript,javascript.jsx,php,blade,svelte,eelixir,scss imap <buffer> <expr> <Tab> emmet#expandAbbrIntelligent("\<tab>")
+let g:user_emmet_expandabbr_key='<Tab>'
+
+imap <expr> <Tab> emmet#expandAbbrIntelligent("\<tab>")
+
 au BufRead,BufNewFile *.md setlocal textwidth=0 wrapmargin=0 wrap linebreak
 
 " autocmd FileType cpp BufWritePost * Neomake
@@ -241,6 +249,7 @@ set regexpengine=1
 set wildignore=*.so,*.swp,*.zip,*.exe,*.bak,*.class
 
 autocmd filetype scss set sw=2 expandtab
+autocmd filetype json set sw=2 expandtab
 autocmd filetype html set sw=2 expandtab
 autocmd filetype c set sw=4 expandtab
 autocmd filetype yaml set sw=2 expandtab
@@ -289,12 +298,14 @@ command! -bang -nargs=* GGrep
   \   'git grep --line-number '.shellescape(<q-args>), 0,
   \   { 'dir': systemlist('git rev-parse --show-toplevel')[0] }, <bang>0)
 
-" augroup fmt
-"   autocmd!
-"   autocmd BufWritePre *.elm syntax off | Neoformat | syntax on
-" augroup END
 
-" nnoremap u :syntax off \| undo \| syntax on<CR>
-" nnoremap <C-r> :syntax off \| redo \| syntax on<CR>
+let g:neoformat_enabled_javascript = ['prettier']
+
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.elm nested syntax off | Neoformat | syntax on
+  autocmd BufWritePre *.purs nested Neoformat
+  autocmd BufWritePre *.re nested Neoformat
+augroup END
 
 set backupcopy=yes
