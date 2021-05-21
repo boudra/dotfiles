@@ -27,4 +27,9 @@ if test -z "$SSH_AGENT_PID"
   eval (ssh-agent -c | head -n -1)
 end
 
-source ~/.asdf/asdf.fish
+if test -d /usr/local/opt/asdf
+  source /usr/local/opt/asdf/asdf.fish
+  set -g fish_user_paths "/usr/local/opt/openjdk/bin" $fish_user_paths
+else
+  source ~/.asdf/asdf.fish
+end
