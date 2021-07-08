@@ -23,10 +23,6 @@ function t
   tmux attach -t $argv[1] || tmux new -s $argv[1]
 end
 
-if test -z "$SSH_AGENT_PID"
-  eval (ssh-agent -c | head -n -1)
-end
-
 if test -d /usr/local/opt/asdf
   source /usr/local/opt/asdf/asdf.fish
   set -g fish_user_paths "/usr/local/opt/openjdk/bin" $fish_user_paths
