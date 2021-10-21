@@ -313,3 +313,13 @@ augroup fmt
 augroup END
 
 set backupcopy=yes
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "elixir", "css", "html", "javascript", "typescript", "go" },
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
