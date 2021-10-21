@@ -9,6 +9,7 @@ end
 alias gst 'git status'
 alias gdiff 'git diff'
 alias gp 'git push'
+alias gpu 'gp -u origin HEAD'
 alias ga 'git add'
 alias gc 'git commit'
 alias e '$EDITOR'

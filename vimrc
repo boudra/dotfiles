@@ -57,9 +57,12 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('octol/vim-cpp-enhanced-highlight')
 
   call dein#add('sbdchd/neoformat')
+  call dein#add('neovim/nvim-lspconfig')
 
-  call dein#add('~/.fzf')
-  call dein#add('junegunn/fzf.vim')
+  call dein#add('nvim-lua/plenary.nvim')
+  call dein#add('nvim-telescope/telescope.nvim')
+
+  call dein#add('nvim-treesitter/nvim-treesitter', {'hook_post_update': 'TSUpdate'})
 
   call dein#add('evanleck/vim-svelte')
 
@@ -176,11 +179,12 @@ map <Leader>k <Plug>(easymotion-k)
 nmap s <Plug>(easymotion-s2)
 
 nmap <Leader>w :w<CR>
-nmap <Leader>e :Files<CR>
-nmap <Leader>g :Rg<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>n :enew<CR>
+
+nnoremap <leader>e <cmd>Telescope find_files<cr>
+nnoremap <leader>g <cmd>Telescope live_grep<cr>
 
 nmap gs :Gstatus<CR>
 nmap gb :Gbr<CR>
