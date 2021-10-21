@@ -62,6 +62,8 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('nvim-lua/plenary.nvim')
   call dein#add('nvim-telescope/telescope.nvim')
 
+  call dein#add('nvim-telescope/telescope-fzf-native.nvim', {'build' : 'make'})
+
   call dein#add('nvim-treesitter/nvim-treesitter', {'hook_post_update': 'TSUpdate'})
 
   call dein#add('evanleck/vim-svelte')
@@ -183,7 +185,7 @@ nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>n :enew<CR>
 
-nnoremap <leader>e <cmd>Telescope find_files<cr>
+nnoremap <leader>e <cmd>Telescope git_files<cr>
 nnoremap <leader>g <cmd>Telescope live_grep<cr>
 
 nmap gs :Gstatus<CR>
@@ -316,10 +318,12 @@ set backupcopy=yes
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "elixir", "css", "html", "javascript", "typescript", "go" },
+  ensure_installed = { "elixir", "heex", "css", "html", "javascript", "typescript", "go" },
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
   },
 }
+
+require('telescope').load_extension('fzf')
 EOF
