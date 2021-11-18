@@ -25,48 +25,30 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('vim-airline/vim-airline-themes')
   call dein#add('ayu-theme/ayu-vim')
 
-  call dein#add('slashmili/alchemist.vim')
-  call dein#add('elixir-lang/vim-elixir')
-  call dein#add('rust-lang/rust.vim')
-  call dein#add('evanleck/vim-svelte')
-  call dein#add('leafgarland/typescript-vim')
-
   call dein#add('mattn/emmet-vim')
   call dein#add('christoomey/vim-tmux-navigator')
   call dein#add('mhinz/vim-startify')
-  call dein#add('pangloss/vim-javascript')
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-abolish')
-  call dein#add('MaxMEllon/vim-jsx-pretty')
   call dein#add('tpope/vim-rhubarb')
 
   call dein#add('tomtom/tcomment_vim')
-  call dein#add('andys8/vim-elm-syntax')
-  call dein#add('purescript-contrib/purescript-vim')
-  call dein#add('vmchale/dhall-vim')
-  " call dein#add('reasonml-editor/vim-reason-plus')
-  call dein#add('jordwalke/vim-reasonml')
-  " call dein#add('fatih/vim-go')
-  call dein#add('ElmCast/elm-vim')
   call dein#add('junegunn/goyo.vim')
 
   call dein#add('tpope/vim-surround')
   call dein#add('dag/vim-fish')
 
   call dein#add('terryma/vim-multiple-cursors')
-  call dein#add('octol/vim-cpp-enhanced-highlight')
 
   call dein#add('sbdchd/neoformat')
+
   call dein#add('neovim/nvim-lspconfig')
 
   call dein#add('nvim-lua/plenary.nvim')
   call dein#add('nvim-telescope/telescope.nvim')
 
   call dein#add('nvim-telescope/telescope-fzf-native.nvim', {'build' : 'make'})
-
   call dein#add('nvim-treesitter/nvim-treesitter', {'hook_post_update': 'TSUpdate'})
-
-  call dein#add('evanleck/vim-svelte')
 
   call dein#end()
   call dein#save_state()
@@ -138,9 +120,6 @@ autocmd filetype elixir setl makeprg=mix\ compile
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
 
-autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :silent <C-u>ClangFormat<CR>
-autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :slilent ClangFormat<CR>
-
 set t_Co=256
 let g:enable_bold_font = 1
 set termguicolors
@@ -185,12 +164,12 @@ nmap <Leader>q :q<CR>
 nmap <Leader>k :bd<CR>
 nmap <Leader>n :enew<CR>
 
-nnoremap <leader>e <cmd>Telescope git_files<cr>
+nnoremap <leader>e <cmd>:lua find_files()<cr>
 nnoremap <leader>g <cmd>Telescope live_grep<cr>
 
-nmap gs :Gstatus<CR>
+nmap gs :Git<CR>
 nmap gb :Gbr<CR>
-nmap gv :Gbrowse<CR>
+nmap gv :GBrowse<CR>
 nmap gP :Dispatch git push<CR>
 nmap gp :Dispatch git pull<CR>
 
@@ -264,7 +243,6 @@ autocmd filetype javascript.jsx set sw=2 expandtab
 autocmd filetype go set ts=4 sw=4 sts=4 noexpandtab
 autocmd filetype elm set sw=4 expandtab
 autocmd filetype elixir set sw=2 expandtab
-au BufRead,BufNewFile *.json.mustache setfiletype json
 
 if(exists('breakindent'))
   set breakindent
@@ -272,9 +250,6 @@ endif
 
 " quick-scope
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-" ag.vim
-let g:ag_working_path_mode="ra"
 
 set autoread
 
@@ -297,33 +272,39 @@ let &t_ZR="\e[23m"
 
 cmap w!! w !sudo tee > /dev/null %
 
-" Command for git grep
-" - fzf#vim#grep(command, with_column, [options], [fullscreen])
-command! -bang -nargs=* GGrep
-  \ call fzf#vim#grep(
-  \   'git grep --line-number '.shellescape(<q-args>), 0,
-  \   { 'dir': systemlist('git rev-parse --show-toplevel')[0] }, <bang>0)
-
-
 let g:neoformat_enabled_javascript = ['prettier']
+let g:neoformat_enabled_heex = ['prettier']
 
 augroup fmt
   autocmd!
   autocmd BufWritePre *.elm nested syntax off | Neoformat | syntax on
   autocmd BufWritePre *.purs nested Neoformat
   autocmd BufWritePre *.re nested Neoformat
+  autocmd BufWritePre *.ex nested Neoformat
 augroup END
 
 set backupcopy=yes
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "elixir", "heex", "css", "html", "javascript", "typescript", "go" },
+  ensure_installed = { "elixir", "heex", "css", "html", "javascript", "typescript", "go", "dockerfile"},
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
   },
 }
 
-require('telescope').load_extension('fzf')
+local telescope = require('telescope')
+
+telescope.load_extension('fzf')
+
+find_files = function()
+  require('telescope.builtin').find_files {
+    find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
+    previewer = false
+  }
+end
 EOF
+
+au bufnewfile,bufread *.html.eex set filetype=heex
+au BufRead,BufNewFile *.json.mustache setfiletype json
