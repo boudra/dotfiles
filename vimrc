@@ -21,40 +21,23 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('ntpeters/vim-better-whitespace')
   call dein#add('easymotion/vim-easymotion')
 
-  call dein#add('bling/vim-airline')
-  call dein#add('vim-airline/vim-airline-themes')
+  call dein#add('itchyny/lightline.vim')
   call dein#add('ayu-theme/ayu-vim')
-
-  call dein#add('slashmili/alchemist.vim')
-  call dein#add('elixir-lang/vim-elixir')
-  call dein#add('rust-lang/rust.vim')
-  call dein#add('evanleck/vim-svelte')
-  call dein#add('leafgarland/typescript-vim')
 
   call dein#add('mattn/emmet-vim')
   call dein#add('christoomey/vim-tmux-navigator')
   call dein#add('mhinz/vim-startify')
-  call dein#add('pangloss/vim-javascript')
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-abolish')
-  call dein#add('MaxMEllon/vim-jsx-pretty')
   call dein#add('tpope/vim-rhubarb')
 
   call dein#add('tomtom/tcomment_vim')
-  call dein#add('andys8/vim-elm-syntax')
-  call dein#add('purescript-contrib/purescript-vim')
-  call dein#add('vmchale/dhall-vim')
-  " call dein#add('reasonml-editor/vim-reason-plus')
-  call dein#add('jordwalke/vim-reasonml')
-  " call dein#add('fatih/vim-go')
-  call dein#add('ElmCast/elm-vim')
   call dein#add('junegunn/goyo.vim')
 
   call dein#add('tpope/vim-surround')
   call dein#add('dag/vim-fish')
 
   call dein#add('terryma/vim-multiple-cursors')
-  call dein#add('octol/vim-cpp-enhanced-highlight')
 
   call dein#add('sbdchd/neoformat')
   call dein#add('neovim/nvim-lspconfig')
@@ -66,7 +49,8 @@ if dein#load_state('~/.vim/bundle')
 
   call dein#add('nvim-treesitter/nvim-treesitter', {'hook_post_update': 'TSUpdate'})
 
-  call dein#add('evanleck/vim-svelte')
+  " Languages
+  call dein#add('elixir-editors/vim-elixir')
 
   call dein#end()
   call dein#save_state()
@@ -91,6 +75,7 @@ au BufRead,BufNewFile *.md setlocal textwidth=0 wrapmargin=0 wrap linebreak
 " autocmd FileType cpp BufWritePost * Neomake
 
 syntax on
+
 set cino=N-s
 " set re=2
 
@@ -141,14 +126,33 @@ set suffixesadd=".cpp .hpp .java .php .html"
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :silent <C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :slilent ClangFormat<CR>
 
+let g:lightline = {
+      \ 'colorscheme': 'ayu_mirage',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \   'filename': 'LightlineFilename'
+      \ },
+      \ }
+
+function! LightlineFilename()
+  let root = fnamemodify(get(b:, 'git_dir'), ':h')
+  let path = expand('%:p')
+  if path[:len(root)-1] ==# root
+    return path[len(root)+1:]
+  endif
+  return expand('%')
+endfunction
+
 set t_Co=256
 let g:enable_bold_font = 1
 set termguicolors
 set background=dark
 let ayucolor="mirage"
 colorscheme ayu
-let g:airline_theme = 'hybrid'
-let g:airline_powerline_fonts = 0
 
 let g:startify_change_to_vcs_root = 0
 let g:startify_session_autoload = 0
@@ -232,6 +236,7 @@ set foldlevelstart=20
 set formatoptions=cq
 set nohlsearch
 set incsearch
+set noshowmode
 
 set laststatus=2
 set wrap
@@ -319,11 +324,11 @@ set backupcopy=yes
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "elixir", "heex", "css", "html", "javascript", "typescript", "go" },
+  sync_install = false,
   highlight = {
     enable = true,
+    disable = { "elixir", "heex" }, -- slow
     additional_vim_regex_highlighting = false,
   },
 }
-
-require('telescope').load_extension('fzf')
 EOF
