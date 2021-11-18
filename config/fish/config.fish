@@ -19,6 +19,8 @@ for file in $fisher_path/conf.d/*.fish
   builtin source $file 2> /dev/null
 end
 
+set -g async_prompt_functions _pure_prompt_git
+
 function t
   tmux attach -t $argv[1] || tmux new -s $argv[1]
 end
