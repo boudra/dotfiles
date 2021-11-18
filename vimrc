@@ -21,8 +21,7 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('ntpeters/vim-better-whitespace')
   call dein#add('easymotion/vim-easymotion')
 
-  call dein#add('bling/vim-airline')
-  call dein#add('vim-airline/vim-airline-themes')
+  call dein#add('itchyny/lightline.vim')
   call dein#add('ayu-theme/ayu-vim')
 
   call dein#add('mattn/emmet-vim')
@@ -50,6 +49,9 @@ if dein#load_state('~/.vim/bundle')
   call dein#add('nvim-telescope/telescope-fzf-native.nvim', {'build' : 'make'})
   call dein#add('nvim-treesitter/nvim-treesitter', {'hook_post_update': 'TSUpdate'})
 
+  " Languages
+  call dein#add('elixir-editors/vim-elixir')
+
   call dein#end()
   call dein#save_state()
 
@@ -73,6 +75,7 @@ au BufRead,BufNewFile *.md setlocal textwidth=0 wrapmargin=0 wrap linebreak
 " autocmd FileType cpp BufWritePost * Neomake
 
 syntax on
+
 set cino=N-s
 " set re=2
 
@@ -120,14 +123,33 @@ autocmd filetype elixir setl makeprg=mix\ compile
 set path=.,,**
 set suffixesadd=".cpp .hpp .java .php .html"
 
+let g:lightline = {
+      \ 'colorscheme': 'ayu_mirage',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \   'filename': 'LightlineFilename'
+      \ },
+      \ }
+
+function! LightlineFilename()
+  let root = fnamemodify(get(b:, 'git_dir'), ':h')
+  let path = expand('%:p')
+  if path[:len(root)-1] ==# root
+    return path[len(root)+1:]
+  endif
+  return expand('%')
+endfunction
+
 set t_Co=256
 let g:enable_bold_font = 1
 set termguicolors
 set background=dark
 let ayucolor="mirage"
 colorscheme ayu
-let g:airline_theme = 'hybrid'
-let g:airline_powerline_fonts = 0
 
 let g:startify_change_to_vcs_root = 0
 let g:startify_session_autoload = 0
@@ -211,6 +233,7 @@ set foldlevelstart=20
 set formatoptions=cq
 set nohlsearch
 set incsearch
+set noshowmode
 
 set laststatus=2
 set wrap
@@ -283,13 +306,17 @@ augroup fmt
   autocmd BufWritePre *.ex nested Neoformat
 augroup END
 
+autocmd bufnewfile,bufread *.html.heex set filetype=eelixir
+
 set backupcopy=yes
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "elixir", "heex", "css", "html", "javascript", "typescript", "go", "dockerfile"},
+  sync_install = false,
   highlight = {
     enable = true,
+    disable = { "elixir", "heex" }, -- slow
     additional_vim_regex_highlighting = false,
   },
 }
