@@ -319,6 +319,8 @@ augroup fmt
   autocmd BufWritePre *.re nested Neoformat
 augroup END
 
+autocmd bufnewfile,bufread *.html.heex set filetype=eelixir
+
 set backupcopy=yes
 
 lua <<EOF
