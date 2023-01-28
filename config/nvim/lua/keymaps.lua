@@ -41,7 +41,15 @@ vim.keymap.set("n", "N", "<Plug>(easymotion-prev)")
 
 vim.keymap.set("n", ";", ":")
 
-vim.keymap.set("n", "gp", ":TermExec cmd='git push -u origin HEAD && exit 0'<CR>")
+vim.keymap.set("n", "gp", function()
+  local cwd = vim.fn.getcwd()
+  print(cwd)
+  vim.fn.jobstart({
+    "tmux",
+    "popup",
+    string.format("cd '%s' && git push -u origin HEAD", cwd)
+  }, { detach = true })
+end)
 
 vim.g["easymotion_smartcase"] = 1
 vim.g["easymotion_use_smartsign_us"] = 1
