@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )
 
 FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
@@ -49,16 +51,6 @@ for FILE in $FILES; do
 
     fi
 
-    if [ $NAME == "gitconfig" ]; then
-        read -r -p "Please specify the author email address to use for git: " EMAIL
-        read -r -p "Please specify the author name to use for git (usually your full name): " NAME
-        rm -rf ${DEST}
-        cp ${SRC} ${DEST}
-        sed -i '' "s/{{\ EMAIL\ }}/$EMAIL/" ${DEST}
-        sed -i '' "s/{{\ NAME\ }}/$NAME/" ${DEST}
-        continue
-    fi
-
     mkdir -p $(dirname $DEST)
     rm -rf ${DEST}
     ln -s ${SRC} ${DEST}
@@ -67,7 +59,7 @@ for FILE in $FILES; do
 
 done
 
-curl -sfL https://direnv.net/install.sh | bash
+# curl -sfL https://direnv.net/install.sh | bash
 
 curl https://git.io/fisher --create-dirs -sLo ${DIR}/config/fish/functions/fisher.fish
-fish -c fisher update
+fish -c "fisher update"

@@ -1,11 +1,11 @@
 [core]
     excludesfile = ~/.gitignore
-    editor = vim
+    editor = nvim
 [user]
-    email = {{ EMAIL }}
-    name = {{ NAME }}
+    email = boudra.moha@gmail.com
+    name = Mohamed Boudra
 [diff]
-    tool = vimdiff
+    tool = nvimdiff
 [difftool]
     prompt = false
 [push]

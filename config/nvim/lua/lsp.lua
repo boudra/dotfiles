@@ -66,6 +66,11 @@ lsp.tsserver.setup {
   on_attach = on_attach
 }
 
+-- lsp.eslint_d.setup {
+--   capabilities = capabilities,
+--   on_attach = on_attach
+-- }
+
 lsp.emmet_ls.setup({
   -- on_attach = on_attach,
   capabilities = capabilities,
