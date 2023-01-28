@@ -5,6 +5,8 @@
 autoload -Uz vcs_info
 precmd() { vcs_info }
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '*'
 zstyle ':vcs_info:*' stagedstr '+'
@@ -18,15 +20,20 @@ autoload -U colors && colors
 setopt PROMPT_SUBST
 PROMPT='%{$fg[blue]%}${PWD/#$HOME/~} %{$fg[yellow]%}${vcs_info_msg_0_}'$'\n''%{$fg[red]%}❯ %{$reset_color%}'
 
-eval "$(direnv hook zsh)"
+# eval "$(direnv hook zsh)"
 
 export EDITOR=nvim
 
 alias e="$EDITOR"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
+
+bindkey -v
 
 function t() {
   tmux attach -t $1 || tmux new -s $1
 }
+
+. "$HOME/.asdf/asdf.sh"
 
 alias g='git'
 alias ga='git add'

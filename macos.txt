@@ -1,0 +1,4 @@
+eval (/opt/homebrew/bin/brew shellenv)
+
+brew install direnv fish neovim tmux autoconf gnupg go rg
+brew install --cask spotify kitty tableplus firefox slack docker

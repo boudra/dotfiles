@@ -1,13 +1,7 @@
 /vim/sessions
 /vim/bundle
-!/vim/bundle/repos/github.com/Shougo/dein.vim
-/fonts/*
-!fonts/powerline-fonts
 /vim/.vimtags
-/vim/.netrwhist
 /tmux/plugins/*
 !/tmux/plugins/tpm
 .private_zshrc
-config/fish/fisher
-config/fish/functions/fisher.fish
 bin/direnv
