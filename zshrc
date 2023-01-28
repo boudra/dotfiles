@@ -33,7 +33,8 @@ function t() {
   tmux attach -t $1 || tmux new -s $1
 }
 
-. "$HOME/.asdf/asdf.sh"
+# . "$HOME/.asdf/asdf.sh"
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 alias g='git'
 alias ga='git add'

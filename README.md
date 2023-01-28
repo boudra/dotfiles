@@ -1,19 +1,19 @@
-# Mohamed Boudra's dotfiles
+Development setup for Arch Linux and OS X.
 
-Dotfiles for Arch Linux and OS X.
+## macOS Setup
+
+
+```
+eval (/opt/homebrew/bin/brew shellenv)
+
+brew install neovim tmux autoconf gnupg rg asdf direnv
+brew install --cask spotify kitty tableplus firefox slack docker
+```
 
 ## Installation
 
-Run:
 ```
 git clone --recursive https://github.com/boudra/dotfiles ~/dotfiles
 ~/dotfiles/install.sh
 ```
 
-The ```--recursive``` part is important for fetching the submodules.
-
-The install script will ask your confirmation before overwriting any existing config files, if you want to force overwriting use:
-
-```
-~/dotfiles/install.sh -f
-````
