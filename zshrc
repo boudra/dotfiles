@@ -42,3 +42,5 @@ alias gb='git branch'
 alias gp='git push'
 alias gc='git commit -v'
 alias gst='git status'
+
+alias ..='cd ..'
