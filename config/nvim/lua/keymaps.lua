@@ -14,10 +14,11 @@ function vim.getVisualSelection()
   end
 end
 
+
 vim.keymap.set("n", "<Leader>q", "<cmd>x<cr>")
 vim.keymap.set("n", "<Leader>qq", "<cmd>xa<cr>")
 vim.keymap.set("n", "<Leader>b", "<cmd>Telescope buffers<cr>")
-vim.keymap.set("n", "<Leader>f", "<cmd>:lua ProjectFiles()<cr>")
+vim.keymap.set("n", "<Leader>f", "<cmd>Telescope find_files<cr>")
 vim.keymap.set("n", "<Leader>g", "<cmd>Telescope live_grep<cr>")
 
 local tb = require('telescope.builtin')

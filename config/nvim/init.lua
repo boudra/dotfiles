@@ -25,25 +25,35 @@ local telescope = require('telescope')
 
 telescope.load_extension('fzf')
 
-ProjectFiles = function()
-  local ok = pcall(require 'telescope.builtin'.git_files, {
-    show_untracked = true
-  })
-
-  if not ok then require 'telescope.builtin'.find_files {
-      find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
-    }
-  end
-end
-
 telescope.setup { defaults = {
+  vimgrep_arguments = {
+    "rg",
+    "-L",
+    "--color=never",
+    "--no-heading",
+    "--with-filename",
+    "--line-number",
+    "--column",
+    "--smart-case",
+    "--hidden",
+    "--trim",
+    "--glob",
+    "!**/.git/*"
+  },
   mappings = {
     i = {
       ["<C-j>"] = "move_selection_next",
-      ["<C-k>"] = "move_selection_previous"
+      ["<C-k>"] = "move_selection_previous",
+      ["<esc>"] = "close"
     }
   }
-} }
+},
+  pickers = {
+    find_files = {
+      find_command = { 'rg', '--files', '-L', '--hidden', '--glob', '!**/.git/*' },
+    },
+  },
+}
 
 
 -- empty setup using defaults
