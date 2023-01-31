@@ -22,9 +22,9 @@ return require('packer').startup(function(use)
 
   use 'hrsh7th/cmp-nvim-lsp'
   use "hrsh7th/nvim-cmp"
-
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/vim-vsnip-integ'
+  use 'hrsh7th/cmp-nvim-lsp-signature-help'
 
   use "easymotion/vim-easymotion"
   use { "catppuccin/nvim", as = "catppuccin" }
@@ -71,6 +71,7 @@ return require('packer').startup(function(use)
   use({ 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' })
 
   use 'github/copilot.vim'
+  use 'jose-elias-alvarez/null-ls.nvim'
 
   if packer_bootstrap then
     require('packer').sync()

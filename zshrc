@@ -28,6 +28,7 @@ alias e="$EDITOR"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
 
 bindkey -v
+bindkey '^R' history-incremental-search-backward
 
 function t() {
   tmux attach -t $1 || tmux new -s $1
