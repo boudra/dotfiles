@@ -4,8 +4,7 @@ require("mason-lspconfig").setup()
 local lsp_formatting = function(bufnr)
   vim.lsp.buf.format({
     filter = function(client)
-      -- apply whatever logic you want (in this example, we'll only use null-ls)
-      return client.name == "null-ls"
+      return client.name ~= "tsserver"
     end,
     bufnr = bufnr,
   })
@@ -41,8 +40,9 @@ end
 
 require("null-ls").setup({
   sources = {
-    require("null-ls").builtins.formatting.prettierd,
-    require("null-ls").builtins.code_actions.eslint_d
+    require("null-ls").builtins.code_actions.eslint_d,
+    require("null-ls").builtins.diagnostics.eslint_d,
+    require("null-ls").builtins.formatting.prettierd
   }
 })
 
