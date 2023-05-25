@@ -6,6 +6,7 @@
     name = Mohamed Boudra
 [diff]
     tool = nvimdiff
+	colorMoved = zebra
 [difftool]
     prompt = false
 [push]
@@ -15,3 +16,14 @@
     ci = commit
     st = status
     br = branch
+[rerere]
+	enabled = 1
+	autoupdate = true
+[core]
+  hooksPath =  /dev/null
+[pull]
+	rebase = true
+[fetch]
+	prune = true
+[init]
+	defaultBranch = main
