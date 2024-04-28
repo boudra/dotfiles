@@ -1,29 +1,30 @@
 [core]
-    excludesfile = ~/.gitignore
-    editor = nvim
+  excludesfile = ~/.gitignore
+  editor = nvim
 [user]
-    email = boudra.moha@gmail.com
-    name = Mohamed Boudra
+  email = boudra.moha@gmail.com
+  name = Mohamed Boudra
 [diff]
-    tool = nvimdiff
-	colorMoved = zebra
+  tool = nvimdiff
+  colorMoved = zebra
 [difftool]
-    prompt = false
+  prompt = false
 [push]
-    default = simple
+  default = simple
 [alias]
-    co = checkout
-    ci = commit
-    st = status
-    br = branch
+  co = checkout
+  ci = commit
+  st = status
+  br = branch
+  grame = "!r() { git grep -n $1 $2 | while IFS=: read i j k; do git blame -f -L $j,$j $i; done }; r"
 [rerere]
-	enabled = 1
-	autoupdate = true
+  enabled = 1
+  autoupdate = true
 [core]
   hooksPath =  /dev/null
 [pull]
-	rebase = true
+  rebase = true
 [fetch]
-	prune = true
+  prune = true
 [init]
-	defaultBranch = main
+  defaultBranch = main
