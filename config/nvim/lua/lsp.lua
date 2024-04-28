@@ -2,12 +2,14 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 
 local lsp_formatting = function(bufnr)
-  vim.lsp.buf.format({
-    filter = function(client)
-      return client.name ~= "tsserver"
-    end,
-    bufnr = bufnr,
-  })
+  if not vim.g.disable_formatting then
+    vim.lsp.buf.format({
+      filter = function(client)
+        return client.name ~= "tsserver" and client.name ~= "denols"
+      end,
+      bufnr = bufnr,
+    })
+  end
 end
 
 -- if you want to set up formatting on save, you can use this as a callback
@@ -27,6 +29,8 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<cr>")
 
   if client.supports_method("textDocument/formatting") then
+    vim.keymap.set('v', '<Leader>r', vim.lsp.buf.format, bufopts)
+
     vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = augroup,
@@ -40,8 +44,12 @@ end
 
 require("null-ls").setup({
   sources = {
-    require("null-ls").builtins.code_actions.eslint_d,
-    require("null-ls").builtins.diagnostics.eslint_d,
+    require("null-ls").builtins.code_actions.eslint.with({
+      extra_args = {},
+    }),
+    require("null-ls").builtins.diagnostics.eslint.with({
+      extra_args = {},
+    }),
     require("null-ls").builtins.formatting.prettierd
   }
 })
@@ -51,7 +59,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 lsp.rust_analyzer.setup { on_attach = on_attach, capabilities = capabilities }
 
-lsp.sumneko_lua.setup {
+lsp.lua_ls.setup {
   capabilities = capabilities,
   on_attach = on_attach,
   format = {
@@ -83,7 +91,21 @@ lsp.sumneko_lua.setup {
 
 lsp.tsserver.setup {
   capabilities = capabilities,
+  on_attach = on_attach,
+  root_dir = function(fname)
+    return lsp.util.root_pattern(".git")(fname) or lsp.util.root_pattern("package.json")(fname)
+  end
+}
+
+lsp.elixirls.setup {
+  capabilities = capabilities,
   on_attach = on_attach
+}
+
+lsp.denols.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  root_dir = lsp.util.root_pattern("deno.json", "deno.jsonc"),
 }
 
 -- lsp.eslint_d.setup {
@@ -98,7 +120,6 @@ lsp.emmet_ls.setup({
   init_options = {
     html = {
       options = {
-        -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
         ["bem.enabled"] = true,
       },
     },

@@ -24,6 +24,9 @@ return require('packer').startup(function(use)
   use "hrsh7th/nvim-cmp"
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/vim-vsnip-integ'
+  use 'hrsh7th/cmp-cmdline'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-nvim-lsp-signature-help'
 
   use "easymotion/vim-easymotion"
@@ -65,12 +68,21 @@ return require('packer').startup(function(use)
     requires = {
       'nvim-tree/nvim-web-devicons', -- optional, for file icons
     },
-    tag = 'nightly' -- optional, updated every week. (see issue #1193)
+    tag = 'nightly'                  -- optional, updated every week. (see issue #1193)
   }
 
   use({ 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' })
 
-  use 'github/copilot.vim'
+  
+
+  use {
+    "zbirenbaum/copilot.lua"
+  }
+
+  use {
+    "zbirenbaum/copilot-cmp",
+  }
+
   use 'jose-elias-alvarez/null-ls.nvim'
 
   if packer_bootstrap then

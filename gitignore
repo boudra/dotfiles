@@ -46,3 +46,4 @@ todo.md
 erl_crash.dump
 .eslintcache
 NOTES.md
+*.pem
