@@ -16,8 +16,6 @@ FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
 
 git -C ${DIR} submodule update --init --recursive
 
-${DIR}/fzf/install --key-bindings --completion --no-update-rc
-
 GLOBAL_OVERWRITE=1
 
 while getopts "f" o; do
@@ -58,8 +56,3 @@ for FILE in $FILES; do
     echo "$DEST installed."
 
 done
-
-# curl -sfL https://direnv.net/install.sh | bash
-
-curl https://git.io/fisher --create-dirs -sLo ${DIR}/config/fish/functions/fisher.fish
-fish -c "fisher update"
