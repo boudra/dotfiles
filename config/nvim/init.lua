@@ -6,6 +6,10 @@ require("keymaps")
 
 vim.cmd("colorscheme catppuccin")
 
+require("mason-lspconfig").setup {
+    ensure_installed = { "tsserver", "rust_analyzer" },
+}
+
 require 'nvim-treesitter.configs'.setup {
   ensure_installed = {
     "elixir",
@@ -64,11 +68,11 @@ require("nvim-tree").setup({
   },
   view = {
     adaptive_size = true,
-    mappings = {
-      list = {
-        { key = "u", action = "dir_up" },
-      },
-    },
+    -- mappings = {
+    --   list = {
+    --     { key = "u", action = "dir_up" },
+    --   },
+    -- },
   },
   renderer = {
     group_empty = true,
