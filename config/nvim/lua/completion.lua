@@ -1,10 +1,6 @@
 -- Set up nvim-cmp.
 local cmp = require 'cmp'
 
-require("copilot").setup({
-  suggestion = { enabled = true, auto_trigger = true},
-})
-
 cmp.setup({
   snippet = {
     -- REQUIRED - you must specify a snippet engine
@@ -29,7 +25,6 @@ cmp.setup({
   }),
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'copilot' },
     -- { name = 'nvim_lsp_signature_help' },
     { name = 'vsnip' }, -- For vsnip users.
     { name = 'path' },
@@ -62,7 +57,6 @@ cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
     { name = 'path' },
-    { name = 'copilot' },
   }, {
     { name = 'cmdline' }
   })

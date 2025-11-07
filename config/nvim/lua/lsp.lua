@@ -1,11 +1,15 @@
 require("mason").setup()
-require("mason-lspconfig").setup()
+
+require("mason-lspconfig").setup {
+  ensure_installed = { "ts_ls", "rust_analyzer", "elixirls", "emmet_ls" },
+}
+
 
 local lsp_formatting = function(bufnr)
   if not vim.g.disable_formatting then
     vim.lsp.buf.format({
       filter = function(client)
-        return client.name ~= "tsserver" and client.name ~= "denols"
+        return client.name ~= "ts_ls" and client.name ~= "denols"
       end,
       bufnr = bufnr,
     })
@@ -42,24 +46,22 @@ local on_attach = function(client, bufnr)
   end
 end
 
-require("null-ls").setup({
+local null_ls = require("null-ls")
+
+null_ls.setup({
   sources = {
-    require("null-ls").builtins.code_actions.eslint.with({
-      extra_args = {},
-    }),
-    require("null-ls").builtins.diagnostics.eslint.with({
-      extra_args = {},
-    }),
-    require("null-ls").builtins.formatting.prettierd
+    require("none-ls.code_actions.eslint"),
+    require("none-ls.diagnostics.eslint"),
+    null_ls.builtins.formatting.prettierd
   }
 })
 
-local lsp = require("lspconfig");
+local lspconfig = require("lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-lsp.rust_analyzer.setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig.rust_analyzer.setup { on_attach = on_attach, capabilities = capabilities }
 
-lsp.lua_ls.setup {
+lspconfig.lua_ls.setup {
   capabilities = capabilities,
   on_attach = on_attach,
   format = {
@@ -89,31 +91,36 @@ lsp.lua_ls.setup {
 
 }
 
-lsp.tsserver.setup {
+lspconfig.ts_ls.setup {
   capabilities = capabilities,
   on_attach = on_attach,
   root_dir = function(fname)
-    return lsp.util.root_pattern(".git")(fname) or lsp.util.root_pattern("package.json")(fname)
+    return lspconfig.util.root_pattern(".git")(fname) or lspconfig.util.root_pattern("package.json")(fname)
   end
 }
 
-lsp.elixirls.setup {
+lspconfig.elixirls.setup {
   capabilities = capabilities,
   on_attach = on_attach
 }
 
-lsp.denols.setup {
+lspconfig.tailwindcss.setup {
   capabilities = capabilities,
-  on_attach = on_attach,
-  root_dir = lsp.util.root_pattern("deno.json", "deno.jsonc"),
+  on_attach = on_attach
 }
 
--- lsp.eslint_d.setup {
+lspconfig.denols.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+}
+
+-- lspconfig.eslint_d.setup {
 --   capabilities = capabilities,
 --   on_attach = on_attach
 -- }
 
-lsp.emmet_ls.setup({
+lspconfig.emmet_ls.setup({
   -- on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less' },

@@ -14,11 +14,12 @@ function vim.getVisualSelection()
   end
 end
 
-
 vim.keymap.set("n", "<Leader>q", "<cmd>x<cr>")
 vim.keymap.set("n", "<Leader>qq", "<cmd>qa!<cr>")
 vim.keymap.set("n", "<Leader>b", "<cmd>Telescope buffers<cr>")
 vim.keymap.set("n", "<Leader>f", "<cmd>Telescope find_files<cr>")
+vim.keymap.set("n", "<M-p>", "<cmd>Telescope find_files<cr>")
+vim.keymap.set("n", "<M-p>%", "<cmd>Telescope live_grep<cr>")
 vim.keymap.set("n", "<Leader>g", "<cmd>Telescope live_grep<cr>")
 
 local tb = require('telescope.builtin')
@@ -35,7 +36,7 @@ end)
 
 vim.keymap.set("n", "<Leader>b", "<cmd>NvimTreeFindFileToggle<cr>")
 vim.keymap.set("n", "<Leader>d", function()
-  vim.diagnostic.open_float(nil, {focus=false})
+  vim.diagnostic.open_float(nil, { focus = false })
 end)
 
 vim.keymap.set("n", "gs", "<cmd>Git<cr>")
@@ -52,17 +53,17 @@ vim.keymap.set("n", ";", ":")
 vim.keymap.set("n", "gp", "<cmd>GitPush<cr>")
 
 vim.api.nvim_create_user_command(
-    'GitPush',
-    function(opts)
-        local cwd = vim.fn.getcwd()
-        print(cwd)
-        vim.fn.jobstart({
-          "tmux",
-          "popup",
-          string.format("cd '%s' && git push -u origin HEAD", cwd)
-        }, { detach = true })
-    end,
-    {}
+  'GitPush',
+  function(opts)
+    local cwd = vim.fn.getcwd()
+    print(cwd)
+    vim.fn.jobstart({
+      "tmux",
+      "popup",
+      string.format("cd '%s' && git push -u origin HEAD", cwd)
+    }, { detach = true })
+  end,
+  {}
 )
 
 vim.api.nvim_create_user_command("GitBlame", "Git blame", {});
@@ -74,34 +75,34 @@ vim.api.nvim_create_user_command("GitResetFile", "Git reset %", {});
 vim.api.nvim_create_user_command("LspRestartAll", "LspRestart", {});
 
 vim.api.nvim_create_user_command(
-    'GitPull',
-    function(opts)
-        local cwd = vim.fn.getcwd()
-        print(cwd)
-        vim.fn.jobstart({
-          "tmux",
-          "popup",
-          string.format("cd '%s' && git pull", cwd)
-        }, { detach = true })
-    end,
-    {}
+  'GitPull',
+  function(opts)
+    local cwd = vim.fn.getcwd()
+    print(cwd)
+    vim.fn.jobstart({
+      "tmux",
+      "popup",
+      string.format("cd '%s' && git pull", cwd)
+    }, { detach = true })
+  end,
+  {}
 )
 
 vim.api.nvim_create_user_command(
-    'GitDiffProject',
-    function(opts)
-      local cwd = vim.fn.getcwd()
-      print(cwd)
-      vim.fn.jobstart({
-        "tmux",
-        "popup",
-        "-h", "80%",
-        "-w", "80%",
-        "-E",
-        string.format("cd '%s' && git diff", cwd)
-      }, { detach = true })
-    end,
-    {}
+  'GitDiffProject',
+  function(opts)
+    local cwd = vim.fn.getcwd()
+    print(cwd)
+    vim.fn.jobstart({
+      "tmux",
+      "popup",
+      "-h", "80%",
+      "-w", "80%",
+      "-E",
+      string.format("cd '%s' && git diff", cwd)
+    }, { detach = true })
+  end,
+  {}
 )
 
 vim.keymap.set("n", "<Leader>t", function()
@@ -125,3 +126,11 @@ vim.keymap.set("v", "<M-c>", '"+y')
 vim.keymap.set("v", "<D-c>", '"+y')
 
 vim.keymap.set("n", "<M-s>", '<cmd>w<cr>')
+
+-- vim.keymap.set('n', '<leader>d', ':GitDiffProject<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>c', ':Commit ', { noremap = true, silent = false })
+
+-- vim.keymap.set('v', '<CR>', ':GpRewrite<CR>gv', { noremap = true, silent = true })
+-- vim.keymap.set('v', '?', ':GpPopup<CR>gv', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<CR>', ':GpAppend<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('i', '<C-@>', '<Esc>:GpAppend<CR>', { noremap = true, silent = true })
