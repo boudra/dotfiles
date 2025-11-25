@@ -4,7 +4,7 @@
 [user]
   email = boudra.moha@gmail.com
   name = Mohamed Boudra
-	signingkey = /Users/moboudra/.ssh/config/id_rsa.pub
+	signingkey = ~/.ssh/config/id_rsa.pub
 [diff]
   tool = nvimdiff
   colorMoved = zebra
@@ -36,4 +36,4 @@
 [commit]
 	gpgsign = true
 [gpg "ssh"]
-	allowedSignersFile = /Users/moboudra/.ssh/allowed_signers
+	allowedSignersFile = ~/.ssh/allowed_signers
