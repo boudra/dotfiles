@@ -9,3 +9,13 @@ eval "$(direnv hook zsh)"
 # SSH agent
 eval $(ssh-agent -s) > /dev/null
 ssh-add ~/.ssh/id_ed25519 2>/dev/null
+
+# Java
+export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# Android SDK
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+export PATH="$ANDROID_HOME/emulator:$PATH"
