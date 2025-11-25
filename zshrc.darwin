@@ -1,0 +1,23 @@
+# macOS-specific configuration
+
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# asdf via Homebrew
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+# direnv
+eval "$(direnv hook zsh)"
+
+# Android SDK
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+# Java (OpenJDK 21 via Homebrew)
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# SSH agent with Keychain
+eval $(ssh-agent -s) > /dev/null
+ssh-add --apple-use-keychain ~/.ssh/config/id_rsa 2>/dev/null

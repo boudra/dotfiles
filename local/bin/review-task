@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Review task script - reviews tasks with Claude in a new instance
+
+TASK_NAME="$1"
+
+echo "Starting review of task: $TASK_NAME"
+echo "Opening new Claude Code instance for unbiased review..."
+
+# Run the review-task command in a new Claude Code instance
+# This ensures the reviewer has no context from the implementor
+export ARGUMENTS="$TASK_NAME"
+cat ~/.claude/commands/review-task.md | envsubst | claude --model opus --print --output-format text --verbose --allowedTools "Bash Edit MultiEdit Write Read Glob Grep LS Task"
+
+echo "Review complete. Check the task directory for new comment file."

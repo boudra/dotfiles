@@ -14,6 +14,13 @@ FILES=$( find $DIR/* $DIR/config/* -maxdepth 0 \
     -not -path .
 )
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Setting up keyboard repeat rate ..."
+
+    defaults write -g InitialKeyRepeat -int 10
+    defaults write -g KeyRepeat -int 1
+fi
+
 git -C ${DIR} submodule update --init --recursive
 
 GLOBAL_OVERWRITE=1

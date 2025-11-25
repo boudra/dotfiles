@@ -1,0 +1,99 @@
+#!/bin/bash
+# tmux-claude-send - Send a message to an existing Claude window
+# Usage: tmux-claude-send [-s session] -w window-name [-m message] [-c] [-f file]
+
+set -e
+
+# Default values
+SESSION="dev"
+WINDOW=""
+MESSAGE=""
+CLEAR=false
+FILE=""
+
+# Parse arguments
+while getopts "s:w:m:f:ch" opt; do
+    case $opt in
+        s) SESSION="$OPTARG" ;;
+        w) WINDOW="$OPTARG" ;;
+        m) MESSAGE="$OPTARG" ;;
+        f) FILE="$OPTARG" ;;
+        c) CLEAR=true ;;
+        h) 
+            echo "Usage: $0 [-s session] -w window-name [-m message] [-c] [-f file]"
+            echo "  -s: tmux session name (default: dev)"
+            echo "  -w: window name (required)"
+            echo "  -m: message to send"
+            echo "  -f: file containing message to send"
+            echo "  -c: send /clear command before message"
+            echo ""
+            echo "Note: Either -m or -f must be provided (not both)"
+            exit 0
+            ;;
+        \?) echo "Invalid option -$OPTARG" >&2; exit 1 ;;
+    esac
+done
+
+# Validate required arguments
+if [ -z "$WINDOW" ]; then
+    echo "Error: Window name is required (-w)" >&2
+    exit 1
+fi
+
+# Validate message source
+if [ -z "$MESSAGE" ] && [ -z "$FILE" ]; then
+    echo "Error: Either message (-m) or file (-f) must be provided" >&2
+    exit 1
+fi
+
+if [ -n "$MESSAGE" ] && [ -n "$FILE" ]; then
+    echo "Error: Cannot use both -m and -f options" >&2
+    exit 1
+fi
+
+# Read message from file if specified
+if [ -n "$FILE" ]; then
+    if [ ! -f "$FILE" ]; then
+        echo "Error: File '$FILE' does not exist" >&2
+        exit 1
+    fi
+    MESSAGE=$(cat "$FILE")
+fi
+
+# Check if session exists
+if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+    echo "Error: Session '$SESSION' does not exist" >&2
+    exit 1
+fi
+
+# Check if window exists
+if ! tmux list-windows -t "$SESSION" -F "#{window_name}" | grep -q "^${WINDOW}$"; then
+    echo "Error: Window '$WINDOW' does not exist in session '$SESSION'" >&2
+    exit 1
+fi
+
+# Send /clear if requested
+if [ "$CLEAR" = true ]; then
+    echo "Sending /clear command..."
+    tmux send-keys -t "$SESSION:$WINDOW" "/clear" Enter
+    sleep 0.5
+fi
+
+# Send the message
+echo "Sending message to window '$WINDOW' in session '$SESSION'..."
+
+# Handle multi-line messages by sending line by line
+if [[ "$MESSAGE" == *$'\n'* ]]; then
+    # Multi-line message
+    echo "Detected multi-line message, sending line by line..."
+    while IFS= read -r line; do
+        tmux send-keys -t "$SESSION:$WINDOW" "$line"
+        tmux send-keys -t "$SESSION:$WINDOW" C-m  # Send Enter/Return
+    done <<< "$MESSAGE"
+else
+    # Single line message
+    tmux send-keys -t "$SESSION:$WINDOW" "$MESSAGE"
+    tmux send-keys -t "$SESSION:$WINDOW" Enter
+fi
+
+echo "Message sent successfully"

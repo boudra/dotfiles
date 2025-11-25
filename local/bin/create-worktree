@@ -1,0 +1,262 @@
+#!/bin/bash
+
+# Script to create a new worktree from GitHub issues or a custom name
+
+set -e
+
+# Function to check if we're in a bare repository
+is_bare_repo() {
+    if [ -f HEAD ] && [ -d refs ] && [ ! -d .git ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to find repository root and type
+find_repo_info() {
+    # Check if we're in a bare repository
+    if is_bare_repo; then
+        echo "bare:$(pwd)"
+        return 0
+    fi
+    
+    # Check if we're in a worktree directory (has .git file pointing to gitdir)
+    if [ -f .git ]; then
+        # Read the gitdir path from .git file
+        gitdir=$(cat .git | sed 's/gitdir: //')
+        # For normal repos, gitdir looks like: /path/to/repo/.git/worktrees/worktree-name
+        # We need to get /path/to/repo, not /path/to/repo/.git
+        
+        # Check if gitdir contains .git/worktrees
+        if [[ "$gitdir" == *"/.git/worktrees/"* ]]; then
+            # Extract the repo path (everything before /.git/worktrees/)
+            repo_root=$(echo "$gitdir" | sed 's/\/\.git\/worktrees\/.*//')
+            echo "normal:$repo_root"
+            return 0
+        else
+            # Bare repo structure - worktrees are siblings
+            worktrees_dir=$(dirname "$gitdir")
+            bare_repo_dir=$(dirname "$worktrees_dir")
+            echo "bare:$bare_repo_dir"
+            return 0
+        fi
+    fi
+    
+    # Check if we're in a normal git repository
+    if [ -d .git ]; then
+        repo_root=$(git rev-parse --show-toplevel)
+        echo "normal:$repo_root"
+        return 0
+    fi
+    
+    echo "❌ Not in a git repository"
+    exit 1
+}
+
+# Get repository information
+repo_info=$(find_repo_info)
+repo_type=$(echo $repo_info | cut -d: -f1)
+repo_path=$(echo $repo_info | cut -d: -f2-)
+repo_name=$(basename "$repo_path")
+
+echo "DEBUG: repo_info=$repo_info"
+echo "DEBUG: repo_type=$repo_type"
+echo "DEBUG: repo_path=$repo_path"
+echo "DEBUG: repo_name=$repo_name"
+
+# Navigate to the appropriate directory
+if [ "$repo_type" = "bare" ]; then
+    cd "$repo_path"
+else
+    # For normal repos, ensure we're in the main repo directory
+    cd "$repo_path"
+fi
+
+# Function to convert string to kebab-case
+to_kebab_case() {
+    local input="$1"
+    # Convert to lowercase, replace spaces and special chars with hyphens
+    # Remove multiple consecutive hyphens, trim hyphens from start/end
+    echo "$input" | \
+        tr '[:upper:]' '[:lower:]' | \
+        sed 's/[^a-z0-9]/-/g' | \
+        sed 's/--*/-/g' | \
+        sed 's/^-//' | \
+        sed 's/-$//'
+}
+
+# Check if a name was provided as argument
+if [ -n "$1" ]; then
+    # Direct name provided - use it directly
+    BRANCH_NAME=$(to_kebab_case "$1")
+    echo "Using branch name: $BRANCH_NAME"
+    issue_number=""
+else
+    # No argument - use GitHub issue flow
+
+    # Check if gh CLI is available
+    if ! command -v gh &> /dev/null; then
+        echo "❌ GitHub CLI (gh) is not installed"
+        echo "Please install it from: https://cli.github.com/"
+        exit 1
+    fi
+
+    # Check if we're authenticated
+    if ! gh auth status &> /dev/null; then
+        echo "❌ Not authenticated with GitHub"
+        echo "Please run: gh auth login"
+        exit 1
+    fi
+
+    # Get open issues
+    echo "Fetching open GitHub issues..."
+    issues_json=$(gh issue list --state open --json number,title,body --limit 50)
+
+    # Check if there are any open issues
+    if [ "$(echo "$issues_json" | jq '. | length')" -eq 0 ]; then
+        echo "❌ No open issues found"
+        exit 1
+    fi
+
+    # Create array of issue options
+    declare -a issue_options
+    declare -a issue_numbers
+    declare -a issue_titles
+
+    while IFS= read -r line; do
+        number=$(echo "$line" | jq -r '.number')
+        title=$(echo "$line" | jq -r '.title')
+        issue_options+=("#$number: $title")
+        issue_numbers+=("$number")
+        issue_titles+=("$title")
+    done < <(echo "$issues_json" | jq -c '.[]')
+
+    # Show issue selector
+    echo
+    echo "Select an issue to work on:"
+    echo
+    COLUMNS=1
+    PS3=$'\n> '
+    select issue in "${issue_options[@]}" "Enter custom branch name"; do
+        if [ "$issue" = "Enter custom branch name" ]; then
+            read -p "Enter branch name: " BRANCH_NAME
+            issue_number=""
+            break
+        elif [ -n "$issue" ]; then
+            # Get the index of selected issue
+            for i in "${!issue_options[@]}"; do
+                if [ "${issue_options[$i]}" = "$issue" ]; then
+                    selected_index=$i
+                    break
+                fi
+            done
+
+            # Generate branch name from issue title
+            issue_number="${issue_numbers[$selected_index]}"
+            issue_title_kebab=$(to_kebab_case "${issue_titles[$selected_index]}")
+            BRANCH_NAME="${issue_number}-${issue_title_kebab}"
+            echo
+            echo "Branch name: $BRANCH_NAME"
+            break
+        else
+            echo "Invalid selection. Please try again."
+        fi
+    done
+fi
+
+# Determine worktree directory based on repo type
+if [ "$repo_type" = "bare" ]; then
+    WORKTREE_DIR="$BRANCH_NAME"
+else
+    # For normal repos, create in parent directory with repo name prefix
+    parent_dir=$(dirname "$repo_path")
+    WORKTREE_DIR="$parent_dir/${repo_name}-${BRANCH_NAME//\//-}"
+fi
+
+# Create new worktree
+echo
+echo "Creating new worktree for branch: $BRANCH_NAME"
+
+# Ensure we're in the repo directory for git commands
+cd "$repo_path"
+
+echo "DEBUG: repo_path=$repo_path"
+echo "DEBUG: WORKTREE_DIR=$WORKTREE_DIR"
+echo "DEBUG: pwd=$(pwd)"
+
+# Check if branch already exists
+if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+    echo "Branch '$BRANCH_NAME' already exists. Checking for existing worktree..."
+    
+    # Check if worktree already exists
+    existing_worktree=$(git worktree list --porcelain | grep -B2 "branch refs/heads/$BRANCH_NAME" | grep "worktree" | cut -d' ' -f2)
+    
+    if [ -n "$existing_worktree" ]; then
+        if [ -d "$existing_worktree" ]; then
+            echo "Worktree already exists at: $existing_worktree"
+            echo "Would you like to:"
+            echo "1) Change to existing worktree"
+            echo "2) Remove old worktree and create new one"
+            echo "3) Cancel"
+            read -p "Select option (1-3): " option
+            
+            case $option in
+                1)
+                    cd "$existing_worktree"
+                    echo "✅ Changed to existing worktree: $(pwd)"
+                    exit 0
+                    ;;
+                2)
+                    echo "Removing old worktree..."
+                    git worktree remove --force "$existing_worktree"
+                    ;;
+                3)
+                    echo "Cancelled."
+                    exit 0
+                    ;;
+                *)
+                    echo "Invalid option. Cancelled."
+                    exit 1
+                    ;;
+            esac
+        else
+            echo "Pruning stale worktree reference..."
+            git worktree prune
+        fi
+    fi
+    
+    # Create worktree using existing branch
+    git worktree add "$WORKTREE_DIR" "$BRANCH_NAME"
+else
+    # Create new branch and worktree
+    git worktree add "$WORKTREE_DIR" -b "$BRANCH_NAME"
+fi
+
+# Copy .env file if it exists
+if [ "$repo_type" = "bare" ]; then
+    env_source="main/.env"
+else
+    env_source="$repo_path/.env"
+fi
+
+if [ -f "$env_source" ]; then
+    echo "Copying .env file"
+    cp "$env_source" "$WORKTREE_DIR/.env"
+fi
+
+# Change to the new worktree directory and run npm install if package.json exists
+echo "Changing to new worktree directory"
+cd "$WORKTREE_DIR"
+
+if [ -f "package.json" ]; then
+    echo "Running npm install in new worktree"
+    npm install
+fi
+
+echo
+echo "✅ Worktree '$BRANCH_NAME' created successfully!"
+echo ""
+echo "Worktree created at: $(pwd)"
+echo "You can now cd to this directory"
+echo "WORKTREE_PATH=$(pwd)"

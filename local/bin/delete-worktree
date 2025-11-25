@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Script to delete the current worktree (must be run from within a worktree)
+
+set -e
+
+# Check if we're in a worktree directory
+if [ ! -f .git ]; then
+    echo "❌ This script must be run from within a worktree directory"
+    echo ""
+    echo "A worktree directory has a .git file (not a .git directory)"
+    echo "Current directory: $(pwd)"
+    exit 1
+fi
+
+# Read the gitdir to confirm it's actually a worktree
+gitdir=$(cat .git | sed 's/gitdir: //')
+
+# Verify this is a worktree by checking if gitdir contains "worktrees"
+if [[ "$gitdir" != *"/worktrees/"* ]]; then
+    echo "❌ This doesn't appear to be a worktree directory"
+    echo "This might be the main repository"
+    exit 1
+fi
+
+# Get current worktree path
+WORKTREE_PATH=$(pwd)
+
+# Get the branch name
+BRANCH_NAME=$(git branch --show-current)
+
+if [ -z "$BRANCH_NAME" ]; then
+    echo "❌ Could not determine current branch"
+    exit 1
+fi
+
+# Confirm deletion
+echo "⚠️  Delete worktree at: $WORKTREE_PATH"
+echo "Branch: $BRANCH_NAME"
+echo ""
+read -p "Are you sure? (y/n): " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    exit 0
+fi
+
+# Find the main repository (for running git worktree remove)
+# Navigate to the common git dir, then get its parent
+common_dir=$(git rev-parse --git-common-dir)
+if [[ "$common_dir" == *"/.git/worktrees/"* ]]; then
+    # Normal repo: common_dir is like /path/to/repo/.git
+    repo_root=$(dirname "$common_dir")
+else
+    # Bare repo: common_dir is the bare repo itself
+    repo_root="$common_dir"
+fi
+
+# Change to repo root to run git worktree remove
+cd "$repo_root"
+
+# Remove the worktree (but NOT the branch)
+echo "Removing worktree: $WORKTREE_PATH"
+if ! git worktree remove "$WORKTREE_PATH" --force; then
+    echo "❌ Failed to remove worktree!"
+    exit 1
+fi
+
+echo ""
+echo "✅ Worktree deleted successfully!"
+echo "⚠️  You are still in the deleted directory - please cd out"
+echo "💡 The branch '$BRANCH_NAME' is preserved for merging"

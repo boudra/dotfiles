@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Commit and push script - calls gc with --push flag
+
+gc --push

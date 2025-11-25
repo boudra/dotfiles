@@ -25,7 +25,7 @@ Thumbs.db
 *.so
 .tmp
 .lock
-*.out*
+*.out
 *.pyc
 *.trace
 *.swp
@@ -40,10 +40,13 @@ node_modules
 .eslintrc
 .phpcomplete_extended
 codeception.yml
-todo.md
+TODO.md
+TODO.steering.md
 .envrc
 /.cache
 erl_crash.dump
 .eslintcache
 NOTES.md
-*.pem
+/doc/how-to-add-instruments.md
+/.playwright-mcp
+tsconfig.tsbuildinfo

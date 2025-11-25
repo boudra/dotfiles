@@ -1,0 +1,76 @@
+#!/bin/bash
+# tmux-claude-new - Create a new tmux window with Claude and send an initial message
+# Usage: tmux-claude-new [-s session] [-w window-name] [-d directory] [-m message] [-W wait-time]
+
+set -e
+
+# Default values
+SESSION="dev"
+WINDOW=""
+DIRECTORY="$(pwd)"
+MESSAGE=""
+WAIT_TIME=3
+
+# Parse arguments
+while getopts "s:w:d:m:W:h" opt; do
+    case $opt in
+        s) SESSION="$OPTARG" ;;
+        w) WINDOW="$OPTARG" ;;
+        d) DIRECTORY="$OPTARG" ;;
+        m) MESSAGE="$OPTARG" ;;
+        W) WAIT_TIME="$OPTARG" ;;
+        h) 
+            echo "Usage: $0 [-s session] [-w window-name] [-d directory] [-m message] [-W wait-time]"
+            echo "  -s: tmux session name (default: dev)"
+            echo "  -w: window name (required)"
+            echo "  -d: working directory (default: current directory)"
+            echo "  -m: initial message to send to Claude"
+            echo "  -W: wait time in seconds for Claude to start (default: 3)"
+            exit 0
+            ;;
+        \?) echo "Invalid option -$OPTARG" >&2; exit 1 ;;
+    esac
+done
+
+# Validate required arguments
+if [ -z "$WINDOW" ]; then
+    echo "Error: Window name is required (-w)" >&2
+    exit 1
+fi
+
+# Check if session exists
+if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+    echo "Error: Session '$SESSION' does not exist" >&2
+    echo "Create it with: tmux new-session -d -s $SESSION" >&2
+    exit 1
+fi
+
+# Check if window already exists
+if tmux list-windows -t "$SESSION" -F "#{window_name}" | grep -q "^${WINDOW}$"; then
+    echo "Error: Window '$WINDOW' already exists in session '$SESSION'" >&2
+    exit 1
+fi
+
+# Create new window
+echo "Creating window '$WINDOW' in session '$SESSION'..."
+tmux new-window -t "$SESSION" -n "$WINDOW" -c "$DIRECTORY"
+
+# Start Claude
+echo "Starting Claude..."
+tmux send-keys -t "$SESSION:$WINDOW" "claude" Enter
+
+# Wait for Claude to start
+echo "Waiting ${WAIT_TIME}s for Claude to initialize..."
+sleep "$WAIT_TIME"
+
+# Send initial message if provided
+if [ -n "$MESSAGE" ]; then
+    echo "Sending initial message..."
+    tmux send-keys -t "$SESSION:$WINDOW" "$MESSAGE"
+    tmux send-keys -t "$SESSION:$WINDOW" Enter
+fi
+
+echo "Successfully created Claude window '$WINDOW' in session '$SESSION'"
+if [ -n "$MESSAGE" ]; then
+    echo "Initial message sent: $MESSAGE"
+fi

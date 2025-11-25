@@ -1,0 +1,110 @@
+#!/bin/bash
+# tmux-wait - Continuous wait with condition checking
+# Usage: tmux-wait [-s session] [-w window] [-c condition] [-i interval] [-t timeout] [-m message]
+
+set -e
+
+# Default values
+SESSION="dev"
+WINDOW=""
+CONDITION=""
+INTERVAL=30
+TIMEOUT=0
+MESSAGE="Waiting for condition..."
+SCRIPT=""
+
+# Parse arguments
+while getopts "s:w:c:i:t:m:f:h" opt; do
+    case $opt in
+        s) SESSION="$OPTARG" ;;
+        w) WINDOW="$OPTARG" ;;
+        c) CONDITION="$OPTARG" ;;
+        i) INTERVAL="$OPTARG" ;;
+        t) TIMEOUT="$OPTARG" ;;
+        m) MESSAGE="$OPTARG" ;;
+        f) SCRIPT="$OPTARG" ;;
+        h) 
+            echo "Usage: $0 [-s session] [-w window] [-c condition] [-i interval] [-t timeout] [-m message] [-f script]"
+            echo "  -s: tmux session name (default: dev)"
+            echo "  -w: window to monitor (optional)"
+            echo "  -c: bash condition to check"
+            echo "  -f: script file containing condition check"
+            echo "  -i: check interval in seconds (default: 30)"
+            echo "  -t: timeout in seconds (0 = infinite, default: 0)"
+            echo "  -m: status message to display"
+            echo ""
+            echo "Examples:"
+            echo "  # Wait for PR to be merged"
+            echo "  $0 -c 'gh pr view 123 --json state -q .state | grep -q MERGED' -m 'Waiting for PR #123 to merge'"
+            echo ""
+            echo "  # Wait for file to exist"
+            echo "  $0 -c '[ -f /tmp/done.txt ]' -m 'Waiting for process completion'"
+            echo ""
+            echo "  # Monitor with timeout"
+            echo "  $0 -c 'curl -s localhost:3000/health | grep -q ok' -t 300 -m 'Waiting for server'"
+            exit 0
+            ;;
+        \?) echo "Invalid option -$OPTARG" >&2; exit 1 ;;
+    esac
+done
+
+# Validate condition
+if [ -z "$CONDITION" ] && [ -z "$SCRIPT" ]; then
+    echo "Error: Either condition (-c) or script (-f) must be provided" >&2
+    exit 1
+fi
+
+# If script provided, read it
+if [ -n "$SCRIPT" ]; then
+    if [ ! -f "$SCRIPT" ]; then
+        echo "Error: Script file '$SCRIPT' not found" >&2
+        exit 1
+    fi
+    CONDITION="source $SCRIPT"
+fi
+
+# Function to check condition
+check_condition() {
+    if eval "$CONDITION"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Main wait loop
+start_time=$(date +%s)
+echo "$MESSAGE"
+echo "Checking every ${INTERVAL}s | Timeout: ${TIMEOUT}s (0=infinite)"
+echo "Condition: $CONDITION"
+echo "---"
+
+while true; do
+    current_time=$(date +%s)
+    elapsed=$((current_time - start_time))
+    
+    # Check timeout
+    if [ "$TIMEOUT" -gt 0 ] && [ "$elapsed" -ge "$TIMEOUT" ]; then
+        echo "Timeout reached after ${elapsed}s"
+        exit 1
+    fi
+    
+    # Check condition
+    if check_condition; then
+        echo "✓ Condition met after ${elapsed}s"
+        exit 0
+    fi
+    
+    # Display status
+    echo "[$(date '+%H:%M:%S')] Still waiting... (${elapsed}s elapsed)"
+    
+    # If window specified, show its last output
+    if [ -n "$WINDOW" ]; then
+        last_line=$(tmux capture-pane -t "$SESSION:$WINDOW" -p 2>/dev/null | tail -1 | sed 's/[[:space:]]*$//' || echo "")
+        if [ -n "$last_line" ]; then
+            echo "  Window output: ${last_line:0:80}..."
+        fi
+    fi
+    
+    sleep "$INTERVAL"
+done

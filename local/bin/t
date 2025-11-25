@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Use current directory name if no session name provided
+sessionName="${1:-$(basename "$(pwd)")}"
+
+# Only shift if there are arguments
+if [ $# -gt 0 ]; then
+    shift
+fi
+
+# Clean session name - replace dots with underscores
+sessionName="${sessionName//./_}"
+
+# Check if the Tmux session exists, create if not
+if ! tmux has-session -t="$sessionName" 2>/dev/null; then
+    echo "Creating new session '$sessionName'..."
+    TMUX='' tmux new-session -ds "$sessionName"
+fi
+
+# Check if we're in a DIRECT tmux pane (not a subprocess with inherited TMUX)
+inTmuxPane=false
+if [[ -n "${TMUX}" ]] && [[ "$(ps -o comm= -p $PPID)" =~ tmux ]]; then
+    inTmuxPane=true
+    currentSession=$(tmux display-message -p '#S')
+    
+    if [[ "$currentSession" == "$sessionName" ]]; then
+        echo "Already in session '$sessionName'"
+        exit 0
+    fi
+fi
+
+# Switch if inside of Tmux pane, attach otherwise
+if $inTmuxPane; then
+    echo "Switching to session '$sessionName'..."
+    if ! tmux switch-client -t "$sessionName"; then
+        echo "Error: Failed to switch to session '$sessionName'"
+        exit 1
+    fi
+else
+    echo "Attaching to session '$sessionName'..."
+    if ! tmux attach -t "$sessionName"; then
+        echo "Error: Failed to attach to session '$sessionName'"
+        exit 1
+    fi
+fi

@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Auto-commit script - generates commit messages with Claude and commits changes
+
+# Check for --push flag
+push_enabled=true
+if [ "$1" = "--push=false" ]; then
+    push_enabled=false
+fi
+
+# Check if we're in a git repository
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Error: Not in a git repository"
+    exit 1
+fi
+
+# Collect git information
+echo "Collecting git information..."
+
+git_status=$(git status --porcelain)
+git_diff=$(git diff --cached --name-only)
+git_diff_unstaged=$(git diff --name-only)
+git_log=$(git log --oneline -10)
+git_diff_content=$(git diff --cached)
+git_diff_unstaged_content=$(git diff)
+
+# Build the prompt for Claude
+prompt="You are a commit message generator. Based on the git information provided below, generate ONLY a concise, conventional commit message. Do not run any commands, read any files, or provide explanations. Output ONLY the raw commit message with NO backticks, NO code blocks, NO markdown formatting, NO quotes, and NO additional text.
+
+Git Status:
+$git_status
+
+Staged files:
+$git_diff
+
+Unstaged files:
+$git_diff_unstaged
+
+Recent commits:
+$git_log
+
+Staged changes:
+$git_diff_content
+
+Unstaged changes:
+$git_diff_unstaged_content
+
+Generate a conventional commit message following the format: type(scope): description
+Examples: feat: add user authentication, fix: resolve login bug, docs: update README
+
+CRITICAL: Output ONLY the commit message. NO backticks. NO markdown. NO formatting. Just the plain text message."
+
+echo "Generating commit message with Claude..."
+
+# Get commit message from Claude
+commit_message=$(echo "$prompt" | claude --print --output-format text)
+
+if [ -z "$commit_message" ]; then
+    echo "Error: Failed to generate commit message"
+    exit 1
+fi
+
+echo "Generated commit message: $commit_message"
+echo "Committing changes..."
+
+# Add all changes and commit
+git add . && git commit -m "$commit_message"
+
+# Push if --push flag was provided and remote exists
+if [ "$push_enabled" = true ]; then
+    if git remote | grep -q .; then
+        echo "Pushing to remote..."
+        git push -u origin HEAD
+    else
+        echo "No remote configured, skipping push"
+    fi
+fi

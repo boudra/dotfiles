@@ -56,73 +56,81 @@ null_ls.setup({
   }
 })
 
-local lspconfig = require("lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local util = require("lspconfig.util")
 
-lspconfig.rust_analyzer.setup { on_attach = on_attach, capabilities = capabilities }
+-- Configure LSP servers using the new vim.lsp.config API
+vim.lsp.config('rust_analyzer', {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = { "rust-analyzer" },
+  filetypes = { "rust" },
+  root_dir = util.root_pattern("Cargo.toml", "rust-project.json")
+})
+vim.lsp.enable('rust_analyzer')
 
-lspconfig.lua_ls.setup {
+vim.lsp.config('lua_ls', {
   capabilities = capabilities,
   on_attach = on_attach,
-  format = {
-    enable = true,
-    -- Put format options here
-    -- NOTE: the value should be STRING!!
-    defaultConfig = {
-      indent_style = "space",
-      indent_size = "2",
-    }
-  },
-
+  cmd = { "lua-language-server" },
+  filetypes = { "lua" },
+  root_dir = util.root_pattern(".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml", "selene.toml", "selene.yml", ".git"),
   settings = {
     Lua = {
       diagnostics = {
         globals = { 'vim' }
-
       },
       workspace = {
-        -- Make the server aware of Neovim runtime files
         library = vim.api.nvim_get_runtime_file("", true),
         checkThirdParty = false,
       },
     }
   },
+})
+vim.lsp.enable('lua_ls')
 
-
-}
-
-lspconfig.ts_ls.setup {
+vim.lsp.config('ts_ls', {
   capabilities = capabilities,
   on_attach = on_attach,
+  cmd = { "typescript-language-server", "--stdio" },
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
   root_dir = function(fname)
-    return lspconfig.util.root_pattern(".git")(fname) or lspconfig.util.root_pattern("package.json")(fname)
+    return util.root_pattern(".git")(fname) or util.root_pattern("package.json")(fname)
   end
-}
+})
+vim.lsp.enable('ts_ls')
 
-lspconfig.elixirls.setup {
-  capabilities = capabilities,
-  on_attach = on_attach
-}
-
-lspconfig.tailwindcss.setup {
-  capabilities = capabilities,
-  on_attach = on_attach
-}
-
-lspconfig.denols.setup {
+vim.lsp.config('elixirls', {
   capabilities = capabilities,
   on_attach = on_attach,
-  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
-}
+  cmd = { "elixir-ls" },
+  filetypes = { "elixir", "eelixir", "heex", "surface" },
+  root_dir = util.root_pattern("mix.exs", ".git")
+})
+vim.lsp.enable('elixirls')
 
--- lspconfig.eslint_d.setup {
---   capabilities = capabilities,
---   on_attach = on_attach
--- }
+vim.lsp.config('tailwindcss', {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = { "tailwindcss-language-server", "--stdio" },
+  filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte" },
+  root_dir = util.root_pattern("tailwind.config.js", "tailwind.config.cjs", "tailwind.config.mjs", "tailwind.config.ts", "postcss.config.js", "postcss.config.cjs", "postcss.config.mjs", "postcss.config.ts", "package.json", "node_modules", ".git")
+})
+vim.lsp.enable('tailwindcss')
 
-lspconfig.emmet_ls.setup({
+vim.lsp.config('denols', {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = { "deno", "lsp" },
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+  root_dir = util.root_pattern("deno.json", "deno.jsonc"),
+})
+vim.lsp.enable('denols')
+
+vim.lsp.config('emmet_ls', {
   -- on_attach = on_attach,
   capabilities = capabilities,
+  cmd = { "emmet-ls", "--stdio" },
   filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less' },
   init_options = {
     html = {
@@ -132,3 +140,4 @@ lspconfig.emmet_ls.setup({
     },
   }
 })
+vim.lsp.enable('emmet_ls')

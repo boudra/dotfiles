@@ -1,0 +1,163 @@
+#!/bin/bash
+# tmux-monitor - Monitor tmux windows with various patterns
+# Usage: tmux-monitor [-s session] [-w window] [-p pattern] [-i interval] [-n lines] [-m mode]
+
+set -e
+
+# Default values
+SESSION="dev"
+WINDOW=""
+PATTERN=""
+INTERVAL=5
+LINES=20
+MODE="tail"
+HISTORY=false
+
+# Parse arguments
+while getopts "s:w:p:i:n:m:Hh" opt; do
+    case $opt in
+        s) SESSION="$OPTARG" ;;
+        w) WINDOW="$OPTARG" ;;
+        p) PATTERN="$OPTARG" ;;
+        i) INTERVAL="$OPTARG" ;;
+        n) LINES="$OPTARG" ;;
+        m) MODE="$OPTARG" ;;
+        H) HISTORY=true ;;
+        h) 
+            echo "Usage: $0 [-s session] [-w window] [-p pattern] [-i interval] [-n lines] [-m mode] [-H]"
+            echo "  -s: tmux session name (default: dev)"
+            echo "  -w: specific window to monitor (optional, monitors all if not specified)"
+            echo "  -p: grep pattern to filter output"
+            echo "  -i: monitoring interval in seconds (default: 5)"
+            echo "  -n: number of lines to show (default: 20)"
+            echo "  -m: monitoring mode (default: tail)"
+            echo "      tail    - show last N lines"
+            echo "      follow  - continuously follow new output"
+            echo "      watch   - clear screen and show snapshot each interval"
+            echo "      status  - show window status summary"
+            echo "  -H: capture full history buffer instead of just visible area"
+            echo ""
+            echo "Examples:"
+            echo "  $0 -w impl-123 -m follow          # Follow output from specific window"
+            echo "  $0 -p error -i 2                   # Check all windows for errors every 2s"
+            echo "  $0 -m status                       # Show status of all windows"
+            echo "  $0 -w test -H -n 50               # Get last 50 lines from full history"
+            exit 0
+            ;;
+        \?) echo "Invalid option -$OPTARG" >&2; exit 1 ;;
+    esac
+done
+
+# Check if session exists
+if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+    echo "Error: Session '$SESSION' does not exist" >&2
+    exit 1
+fi
+
+# Function to capture pane output
+capture_pane() {
+    local window=$1
+    local capture_cmd="tmux capture-pane -t $SESSION:$window -p"
+    
+    if [ "$HISTORY" = true ]; then
+        capture_cmd="$capture_cmd -S -"
+    fi
+    
+    if [ -n "$PATTERN" ]; then
+        $capture_cmd | grep -E "$PATTERN" | tail -n "$LINES"
+    else
+        $capture_cmd | tail -n "$LINES"
+    fi
+}
+
+# Function to get window status
+get_window_status() {
+    local window=$1
+    local pane_info=$(tmux list-panes -t "$SESSION:$window" -F "#{pane_current_command}" 2>/dev/null | head -1)
+    local last_line=$(tmux capture-pane -t "$SESSION:$window" -p | tail -1 | sed 's/[[:space:]]*$//')
+    echo "[$window] Running: $pane_info | Last: ${last_line:0:60}..."
+}
+
+# Function to monitor based on mode
+case "$MODE" in
+    tail)
+        # One-shot tail mode
+        if [ -n "$WINDOW" ]; then
+            echo "=== Window: $WINDOW ==="
+            capture_pane "$WINDOW"
+        else
+            # Monitor all windows
+            for window in $(tmux list-windows -t "$SESSION" -F "#{window_name}"); do
+                echo "=== Window: $window ==="
+                capture_pane "$window"
+                echo ""
+            done
+        fi
+        ;;
+        
+    follow)
+        # Continuous follow mode
+        echo "Following output (Ctrl-C to stop)..."
+        echo "Interval: ${INTERVAL}s | Pattern: ${PATTERN:-none} | Lines: $LINES"
+        echo "---"
+        
+        while true; do
+            if [ -n "$WINDOW" ]; then
+                capture_pane "$WINDOW"
+            else
+                for window in $(tmux list-windows -t "$SESSION" -F "#{window_name}"); do
+                    echo "[${window}]"
+                    capture_pane "$window" | sed 's/^/  /'
+                done
+            fi
+            sleep "$INTERVAL"
+        done
+        ;;
+        
+    watch)
+        # Clear screen watch mode
+        while true; do
+            clear
+            echo "tmux-monitor | Session: $SESSION | $(date)"
+            echo "Interval: ${INTERVAL}s | Pattern: ${PATTERN:-none} | Lines: $LINES"
+            echo "========================================"
+            
+            if [ -n "$WINDOW" ]; then
+                echo "Window: $WINDOW"
+                echo "---"
+                capture_pane "$WINDOW"
+            else
+                for window in $(tmux list-windows -t "$SESSION" -F "#{window_name}"); do
+                    echo "Window: $window"
+                    echo "---"
+                    capture_pane "$window"
+                    echo ""
+                done
+            fi
+            sleep "$INTERVAL"
+        done
+        ;;
+        
+    status)
+        # Status summary mode
+        while true; do
+            clear
+            echo "tmux-monitor Status | Session: $SESSION | $(date)"
+            echo "========================================"
+            
+            for window in $(tmux list-windows -t "$SESSION" -F "#{window_name}"); do
+                get_window_status "$window"
+            done
+            
+            if [ "$INTERVAL" -eq 0 ]; then
+                break
+            fi
+            sleep "$INTERVAL"
+        done
+        ;;
+        
+    *)
+        echo "Error: Unknown mode '$MODE'" >&2
+        exit 1
+        ;;
+esac

@@ -1,0 +1,192 @@
+#!/bin/bash
+
+# Script to merge a worktree branch back to main and clean up
+
+set -e
+
+# Function to find and navigate to bare repository
+find_bare_repo() {
+    # Check if we're already in a bare repository
+    if [ -f HEAD ] && [ -d refs ]; then
+        return 0
+    fi
+    
+    # Check if we're in a worktree directory (has .git file pointing to gitdir)
+    if [ -f .git ]; then
+        # Read the gitdir path from .git file
+        gitdir=$(cat .git | sed 's/gitdir: //')
+        # Navigate to the bare repo (parent of worktrees directory)
+        worktrees_dir=$(dirname "$gitdir")
+        bare_repo_dir=$(dirname "$worktrees_dir")
+        cd "$bare_repo_dir"
+        
+        # Verify we're now in a bare repository
+        if [ -f HEAD ] && [ -d refs ]; then
+            return 0
+        fi
+    fi
+    
+    echo "❌ Could not find bare git repository"
+    echo "This script must be run from either:"
+    echo "  - A bare git repository directory"
+    echo "  - A worktree directory within the bare repo"
+    exit 1
+}
+
+# Navigate to bare repository
+find_bare_repo
+
+# Verify ./main directory exists
+if [ ! -d "./main" ]; then
+    echo "❌ ./main directory does not exist"
+    echo "This script requires a 'main' worktree to exist"
+    exit 1
+fi
+
+# Function to get existing worktrees (excluding bare repo, main, and prunable ones)
+get_worktrees() {
+    git worktree list --porcelain | awk '
+        /^worktree / { path = $2; prunable = 0 }
+        /^prunable/ { prunable = 1 }
+        /^$/ { 
+            if (path && !prunable && path != "'"$(pwd)"'") {
+                print path
+            }
+            path = ""; prunable = 0
+        }
+        END {
+            if (path && !prunable && path != "'"$(pwd)"'") {
+                print path
+            }
+        }
+    ' | xargs -I {} basename {} | grep -v "^main$"
+}
+
+# Check if branch name is provided
+if [ -z "$1" ]; then
+    # Get available worktrees
+    worktrees=($(get_worktrees))
+    
+    if [ ${#worktrees[@]} -eq 0 ]; then
+        echo "🔍 No feature worktrees found to merge"
+        echo ""
+        echo "💡 To create a new worktree, run:"
+        echo "   create-worktree <branch-name>"
+        echo ""
+        echo "📋 Usage: $0 <branch-name>"
+        echo "   Example: $0 feature/new-feature"
+        exit 1
+    fi
+    
+    echo "Available worktrees to merge:"
+    echo
+    COLUMNS=1
+    PS3=$'\n> '
+    select worktree in "${worktrees[@]}" "Enter custom branch name"; do
+        if [ "$worktree" = "Enter custom branch name" ]; then
+            read -p "Enter branch name: " BRANCH_NAME
+            break
+        elif [ -n "$worktree" ]; then
+            BRANCH_NAME="$worktree"
+            break
+        else
+            echo "Invalid selection. Please try again."
+        fi
+    done
+else
+    BRANCH_NAME="$1"
+fi
+WORKTREE_DIR="$BRANCH_NAME"
+
+# Check if worktree directory exists
+if [ ! -d "$WORKTREE_DIR" ]; then
+    echo "❌ Worktree directory '$WORKTREE_DIR' does not exist"
+    exit 1
+fi
+
+# Switch to feature branch worktree first
+echo "Switching to feature branch worktree: $WORKTREE_DIR"
+cd "$WORKTREE_DIR"
+
+# Check for uncommitted changes
+if ! git diff --quiet || ! git diff --cached --quiet; then
+    echo "❌ You have uncommitted changes in the feature branch!"
+    echo "📁 Current changes in: $(pwd)"
+    git status --short
+    echo
+    read -p "Do you want to auto-commit these changes? (y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Running auto-commit..."
+        if ! gc; then
+            echo "❌ Auto-commit failed!"
+            exit 1
+        fi
+    else
+        echo "Please commit or stash changes manually before merging."
+        exit 1
+    fi
+fi
+
+# Run npm run check to ensure everything is working
+echo "Running npm run check to validate the branch"
+if ! npm run check; then
+    echo "❌ npm run check failed! Please fix issues before merging."
+    echo "📁 Fix issues in: $(pwd)"
+    exit 1
+fi
+
+# Pull latest main into feature branch to check for conflicts
+echo "Merging main into feature branch to check for conflicts"
+if ! git merge main; then
+    echo "❌ Merge conflicts detected! Please resolve conflicts in feature branch first."
+    echo "📁 Fix conflicts in: $(pwd)"
+    echo "After resolving conflicts, run: git add . && git commit"
+    exit 1
+fi
+
+# Switch to main worktree
+echo "Switching to main worktree"
+cd ../main
+
+# Pull latest changes
+echo "Pulling latest changes from origin"
+git pull origin main
+
+# Squash merge the feature branch
+echo "Squash merging branch: $BRANCH_NAME"
+if ! git merge --squash "$BRANCH_NAME"; then
+    echo "❌ Squash merge failed! Worktree preserved for manual resolution."
+    echo "📁 Fix conflicts in: $(pwd)"
+    exit 1
+fi
+
+# Commit the squashed changes
+echo "Committing squashed changes"
+if ! git commit -m "feat: merge $BRANCH_NAME (squashed)"; then
+    echo "❌ Commit failed after squash merge!"
+    exit 1
+fi
+
+# Push merged changes
+echo "Pushing merged changes to origin"
+if ! git push origin main; then
+    echo "❌ Push failed! Merge completed but push unsuccessful."
+    echo "📁 Manual push required from: $(pwd)"
+    exit 1
+fi
+
+# Go back to bare repo root
+cd ..
+
+# Remove the worktree (only if merge and push succeeded)
+echo "Removing worktree: $WORKTREE_DIR"
+git worktree remove "$WORKTREE_DIR"
+
+# Delete the branch
+echo "Deleting branch: $BRANCH_NAME"
+git branch -d "$BRANCH_NAME"
+
+echo "✅ Branch '$BRANCH_NAME' merged and cleaned up successfully!"
+echo "🧹 Worktree removed and branch deleted"
+echo "🚀 Ready for next feature!"

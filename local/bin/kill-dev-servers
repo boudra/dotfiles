@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Kill all processes listening on ports 3000-4000
+
+lsof -ti tcp:3000-4000 2>/dev/null | xargs -r kill -9
+echo "Done."
