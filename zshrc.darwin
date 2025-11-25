@@ -21,3 +21,6 @@ export PATH="$JAVA_HOME/bin:$PATH"
 # SSH agent with Keychain
 eval $(ssh-agent -s) > /dev/null
 ssh-add --apple-use-keychain ~/.ssh/config/id_rsa 2>/dev/null
+
+# Claude Code (local install on macOS)
+alias claude="~/.claude/local/claude"

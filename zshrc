@@ -63,7 +63,6 @@ command -v pyenv >/dev/null && eval "$(pyenv init -)"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.claude/local:$PATH"
 
-alias claude="~/.claude/local/claude"
 
 alias g='git'
 alias ga='git add'
