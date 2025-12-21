@@ -1,0 +1,282 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+show_help() {
+  cat <<'EOF'
+agl - Agent Loop
+
+Runs an agent loop that implements tasks from a plan file one by one,
+with a reviewer pass after each implementation.
+
+USAGE:
+  agl [OPTIONS] [plan.md]
+
+OPTIONS:
+  --claude, -c      Use Claude instead of Codex
+  --watch, -w       Keep running and wait for new tasks instead of exiting
+  --help, -h        Show this help message
+
+EXAMPLES:
+  agl                     Run with Codex on plan.md
+  agl --claude            Run with Claude on plan.md
+  agl -c myplan.md        Run with Claude on myplan.md
+
+HOW IT WORKS:
+  1. Reads the plan file and finds the first unchecked task (- [ ])
+  2. Marks it as in progress (- [⏳]) so other agents know to skip it
+  3. Completes that task (implementation, review, refactor, or planning checkpoint)
+  4. Marks the task as done (- [x]) and adds a summary
+  5. Commits the changes
+  6. Repeats until all tasks are complete
+
+TASK STATES:
+  - [ ]  Pending - not yet started
+  - [⏳] In progress - being worked on by an agent
+  - [x]  Complete - finished
+
+  Multiple agents can work in the same directory. Tasks marked ⏳ are skipped.
+  Add explicit review/checkpoint tasks to the plan when you want reviews.
+
+OUTPUT:
+  - Iteration progress is printed to stdout
+  - Full agent output is logged to plan-loop.log in the plan file's directory
+
+SAMPLE plan.md:
+
+  ## Context
+  Brief description of what we're building and why.
+
+  ## Guiding Principles
+  - Keep it simple
+  - Don't break existing functionality
+
+  ## Tasks
+
+  - [ ] **Iteration 1**: implement the first thing.
+
+    - Context and details about what this involves.
+    - More details indented at one level.
+    - Tests: what to test.
+
+  - [ ] **Iteration 2**: implement the second thing.
+
+    - Details here.
+
+  - [ ] **Iteration 2.1**: fix edge case from iteration 2.
+
+    - Use sub-iterations (2.1, 2.2) for related follow-ups.
+    - Add new iterations at the end, or sub-iterations after their parent.
+
+  - [ ] **Checkpoint**: review the work so far.
+
+    - Can anything be simplified? Add tasks if needed.
+
+FORMAT:
+  - Task line: "- [ ] **Iteration N**: brief description."
+  - Blank line after the task checkbox line
+  - Context indented one level (two spaces) as bullet points
+  - Use sub-iterations (1.1, 1.2) for related follow-ups to an iteration
+  - Add new iterations at the end, sub-iterations after their parent
+
+AGENT OVERRIDE:
+  Add "agent=claude" or "agent=codex" to a task line to override the default agent:
+    - [ ] agent=claude **Iteration 5**: task that needs Claude
+  The override is stripped from the task title before execution.
+
+TIPS:
+  - Tasks should be atomic and independently completable
+  - The agent works top-to-bottom, so order matters
+  - Use checkpoint tasks to review progress and expand the plan mid-flight
+
+TASK TYPES AND BEHAVIORS:
+  Planning:     Creates tasks from goals. Can bootstrap entire plan from one task.
+  Testing:      Always completes (pass or fail). If asked to add fix tasks, also add retest.
+  Review:       Same as testing. Completes with findings, spawns fixes + re-review if needed.
+  Checkpoint:   Reviews progress, can add/modify/remove tasks, then completes.
+  Implementation: Just implements. Cannot add tasks.
+
+BOOTSTRAP EXAMPLE:
+  - [ ] **Plan**: break down "build feature X" into iterations.
+    - Create small implementation tasks, add checkpoints and testing tasks.
+EOF
+}
+
+# Parse arguments
+USE_CLAUDE=false
+WATCH_MODE=false
+PLAN_FILE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --help|-h)
+      show_help
+      exit 0
+      ;;
+    --claude|-c)
+      USE_CLAUDE=true
+      shift
+      ;;
+    --watch|-w)
+      WATCH_MODE=true
+      shift
+      ;;
+    *)
+      PLAN_FILE="$1"
+      shift
+      ;;
+  esac
+done
+
+PLAN_FILE=${PLAN_FILE:-plan.md}
+if [[ ! -f "$PLAN_FILE" ]]; then
+  echo "Plan file not found: $PLAN_FILE" >&2
+  echo "Run 'agl --help' for usage." >&2
+  exit 1
+fi
+
+# Exit cleanly on Ctrl+C
+trap 'echo -e "\nInterrupted."; exit 130' INT
+
+REPO_ROOT=$(cd "$(dirname "$PLAN_FILE")" && pwd)
+PLAN_BASENAME=$(basename "$PLAN_FILE")
+PLAN_PATH="$REPO_ROOT/$PLAN_BASENAME"
+PLAN_NAME="${PLAN_BASENAME%.md}"
+
+# Find next available log number
+LOG_NUM=0
+while [[ -f "$REPO_ROOT/$PLAN_NAME.$LOG_NUM.log" ]]; do
+  LOG_NUM=$((LOG_NUM + 1))
+done
+LOG_FILE="$REPO_ROOT/$PLAN_NAME.$LOG_NUM.log"
+
+if $USE_CLAUDE; then
+  DEFAULT_AGENT="claude"
+else
+  DEFAULT_AGENT="codex"
+fi
+
+echo "Agent Loop started"
+echo "Agent: $DEFAULT_AGENT (override with agent=X in task)"
+echo "Plan:  $PLAN_PATH"
+echo "Log:   $LOG_FILE"
+echo ""
+
+run_agent() {
+  local prompt="$1"
+  local agent="$2"
+  if [[ "$agent" == "claude" ]]; then
+    claude --dangerously-skip-permissions -p "$prompt"
+  else
+    codex exec --dangerously-bypass-approvals-and-sandbox -C "$REPO_ROOT" "$prompt"
+  fi
+}
+
+get_next_task_raw() {
+  grep -m1 '\- \[ \]' "$PLAN_PATH" | sed 's/^- \[ \] //' | sed 's/[[:space:]]*$//'
+}
+
+get_task_agent() {
+  local raw="$1"
+  if [[ "$raw" =~ agent=([a-z]+) ]]; then
+    echo "${BASH_REMATCH[1]}"
+  else
+    echo "$DEFAULT_AGENT"
+  fi
+}
+
+get_task_title() {
+  local raw="$1"
+  echo "$raw" | sed 's/agent=[a-z]* *//' | sed 's/\*\*//g'
+}
+
+make_prompt() {
+  local task="$1"
+  cat <<EOF2
+You are an agent working in $REPO_ROOT.
+
+YOUR TASK: $task
+
+1. Read $PLAN_PATH and find this task.
+   - If already marked "- [⏳]" or "- [x]", stop—someone else handled it.
+
+2. TASK BEHAVIORS:
+   - Planning: Create tasks from goals.
+   - Testing/Review: Always complete (pass or fail). If asked to add fix tasks, also add retest/re-review.
+   - Checkpoint: Review progress, add/modify tasks as needed, then complete.
+   - Implementation: Just implement. Do not add tasks.
+
+3. Before starting work, mark the task as in progress:
+   - Change "- [ ]" to "- [⏳]".
+4. IMPORTANT: Other agents or the user may be modifying $PLAN_PATH concurrently.
+   - ALWAYS re-read the file immediately before writing to it.
+   - Keep edits surgical and minimal—only change your task's checkbox and add your summary.
+   - Never rewrite large sections; edit only what you need to avoid conflicts.
+5. IMPORTANT: Other agents may be working in this directory. Be careful with destructive Git operations:
+   - NEVER run git checkout, git stash, git reset, or git clean without explicit user approval.
+   - Only commit your own completed work at the end.
+6. After completing the task, update $PLAN_PATH:
+   - Change "- [⏳]" to "- [x]".
+   - Add an implementation log as an indented bullet with format:
+     "- **Done (YYYY-MM-DD HH:MM)**: Brief summary of what was done. Note any issues or incomplete items."
+   - Example: "- **Done (2025-01-15 14:30)**: Added validation logic and tests. Could not fix edge case X, needs follow-up."
+7. Commit all changes with a clear message describing the work.
+8. Stop immediately after completing that single task.
+EOF2
+}
+
+format_duration() {
+  local seconds=$1
+  if (( seconds < 60 )); then
+    echo "${seconds}s"
+  else
+    local mins=$((seconds / 60))
+    local secs=$((seconds % 60))
+    echo "${mins}m ${secs}s"
+  fi
+}
+
+MAX_RETRIES=3
+
+while true; do
+  while grep -q '\- \[ \]' "$PLAN_PATH"; do
+    raw=$(get_next_task_raw)
+    task=$(get_task_title "$raw")
+    agent=$(get_task_agent "$raw")
+    start_time=$(date +%s)
+    echo "⏳ $task [$agent]"
+    echo -e "\n=== $task ($(date '+%Y-%m-%d %H:%M:%S')) [$agent] ===" >> "$LOG_FILE"
+    prompt=$(make_prompt "$task")
+
+    attempt=1
+    while true; do
+      if run_agent "$prompt" "$agent" >> "$LOG_FILE" 2>&1; then
+        break
+      fi
+      if (( attempt >= MAX_RETRIES )); then
+        echo "❌ $task (failed after $MAX_RETRIES attempts)"
+        echo "Agent failed after $MAX_RETRIES attempts. Check $LOG_FILE for details." >&2
+        exit 1
+      fi
+      backoff=$((attempt * 10))
+      echo "⚠️  Attempt $attempt failed, retrying in ${backoff}s..."
+      sleep $backoff
+      ((attempt++))
+    done
+
+    duration=$(( $(date +%s) - start_time ))
+    echo "✅ $task ($(format_duration $duration))"
+  done
+
+  if $WATCH_MODE; then
+    echo "💤 Waiting for new tasks..."
+    while ! grep -q '\- \[ \]' "$PLAN_PATH"; do
+      sleep 5
+    done
+  else
+    break
+  fi
+done
+
+echo ""
+timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+echo "All tasks complete. ($timestamp)"
