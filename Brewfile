@@ -20,6 +20,9 @@ cask "spotify"
 cask "tableplus"
 cask "firefox"
 cask "docker-desktop"
+# First launch requires macOS network-extension approval and interactive sign-in.
+# Keep account credentials and device enrollment outside these public dotfiles.
+cask "tailscale-app"
 cask "font-jetbrains-mono-nerd-font"
 
 # Dependencies for Paseo's Android SDK asdf plugin.
