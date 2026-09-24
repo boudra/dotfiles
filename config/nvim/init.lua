@@ -4,26 +4,30 @@ require("completion")
 require("lsp")
 require("keymaps")
 
-vim.cmd("colorscheme catppuccin")
+vim.cmd("colorscheme catppuccin-nvim")
 
 require("mason-lspconfig").setup {
   ensure_installed = { "ts_ls", "rust_analyzer" },
 }
 
-require 'nvim-treesitter.configs'.setup {
-  ensure_installed = {
-    "elixir",
-    "heex",
-    "css",
-    "html", "javascript", "typescript", "go", "dockerfile", "rust", "vim", "lua", "solidity",
-    "tsx"
-  },
-  sync_install = false,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
+local treesitter = require('nvim-treesitter')
+treesitter.setup {}
+-- First installation is asynchronous; reopen buffers after parsers finish.
+treesitter.install {
+  "elixir", "heex", "css", "html", "javascript", "typescript", "go",
+  "dockerfile", "rust", "vim", "lua", "solidity", "tsx",
 }
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('TreesitterHighlight', { clear = true }),
+  callback = function(args)
+    local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+    local ok, available = pcall(vim.treesitter.language.add, lang or '')
+    if ok and available then
+      vim.treesitter.start(args.buf, lang)
+    end
+  end,
+})
 
 local telescope = require('telescope')
 
@@ -83,7 +87,7 @@ require("nvim-tree").setup({
 })
 
 vim.g["lightline"] = {
-  colorscheme = 'catppuccin',
+  colorscheme = 'catppuccin_mocha',
   active = {
     left = {
       { 'mode',      'paste' },

@@ -31,6 +31,7 @@ return require('packer').startup(function(use)
 
   use "easymotion/vim-easymotion"
   use { "catppuccin/nvim", as = "catppuccin" }
+  use { "catppuccin/vim", as = "catppuccin-vim" } -- Lightline palette
 
   use 'itchyny/lightline.vim'
   use('christoomey/vim-tmux-navigator')
@@ -57,11 +58,10 @@ return require('packer').startup(function(use)
 
   use {
     'nvim-treesitter/nvim-treesitter',
-    run = function()
-      vim.api.nvim_out_write("treeenvim\n")
-      local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-      ts_update()
-    end,
+    -- main removed nvim-treesitter.configs and the old synchronous update API.
+    -- Requires Neovim 0.12+ and tree-sitter-cli 0.26.1+ from the package manager.
+    branch = 'main',
+    run = ':TSUpdate',
   }
 
   use {

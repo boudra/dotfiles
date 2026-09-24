@@ -2,9 +2,7 @@
   excludesfile = ~/.gitignore
   editor = nvim
 [user]
-  email = boudra.moha@gmail.com
-  name = Mohamed Boudra
-	signingkey = ~/.ssh/config/id_rsa.pub
+	signingkey = ~/.ssh/id_ed25519.pub
 [diff]
   tool = nvimdiff
   colorMoved = zebra
@@ -37,3 +35,7 @@
 	gpgsign = true
 [gpg "ssh"]
 	allowedSignersFile = ~/.ssh/allowed_signers
+
+# Identity and machine-local overrides stay outside this public repository.
+[include]
+  path = ~/.gitconfig.local

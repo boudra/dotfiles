@@ -1,7 +1,7 @@
 # Linux-specific configuration
 
 # asdf (standard install location)
-. "$HOME/.asdf/asdf.sh"
+[[ -f "$HOME/.asdf/asdf.sh" ]] && source "$HOME/.asdf/asdf.sh"
 
 # direnv
 eval "$(direnv hook zsh)"

@@ -1,26 +1,25 @@
-# macOS-specific configuration
+# macOS-specific configuration (Apple silicon and Intel Homebrew).
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 
-# Homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Legacy asdf installs need sourcing; current asdf uses shims directly.
+if [[ -n $HOMEBREW_PREFIX && -f $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh ]]; then
+  source "$HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh"
+fi
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 
-# asdf via Homebrew
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools"
 
-# direnv
-eval "$(direnv hook zsh)"
+if [[ -n $HOMEBREW_PREFIX && -d $HOMEBREW_PREFIX/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ]]; then
+  export JAVA_HOME="$HOMEBREW_PREFIX/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
 
-# Android SDK
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+# macOS provides ssh-agent; ~/.ssh/config handles Keychain and key loading.
 
-# Java (OpenJDK 21 via Homebrew)
-export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
-export PATH="$JAVA_HOME/bin:$PATH"
-
-# SSH agent with Keychain
-eval $(ssh-agent -s) > /dev/null
-ssh-add --apple-use-keychain ~/.ssh/config/id_rsa 2>/dev/null
-
-# # Claude Code (local install on macOS)
-# alias claude="~/.claude/local/claude"
+# Docker Desktop otherwise appends a machine-specific path to the shared zshrc.
+[[ -d "$HOME/.docker/completions" ]] && fpath=("$HOME/.docker/completions" $fpath)

@@ -133,5 +133,18 @@ case "$(uname)" in
     ;;
 esac
 
+# Current asdf uses shims on both macOS and Linux.
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+# Keep Java tied to the project selected by asdf.
+if [[ -f ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/java/set-java-home.zsh ]]; then
+  source "${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/java/set-java-home.zsh"
+  asdf_update_java_home
+fi
+
+# Initialize completion after platform config adds Homebrew to fpath.
+autoload -Uz compinit
+compinit
+
 # Machine-specific secrets (not tracked in git)
 [[ -f ~/.secrets ]] && source ~/.secrets
